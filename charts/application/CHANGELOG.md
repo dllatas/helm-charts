@@ -1,11 +1,8 @@
 # Changelog
 
-## 3.0.1
+## 0.0.1
 
-- Release bump to publish the initial `application` chart package to OCI.
-
-## 3.0.0
-
+- Initial public release of the `application` chart.
 - Rebuilt chart for Helm v4-compatible workflows.
 - Switched to release-based naming conventions with optional overrides.
 - Made service generation explicit via `services[]`.
