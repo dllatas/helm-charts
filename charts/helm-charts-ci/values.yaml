@@ -9,7 +9,7 @@ apiVersions:
 pipeline:
   name: helm-charts-ci
   serviceAccountName: ci-services
-  toolsImage: ghcr.io/haroki/helm-ci-tools:latest
+  toolsImage: quay.io/helmpack/chart-testing:v3.14.0
   cloneTaskRef: git-clone
 
 publish:
