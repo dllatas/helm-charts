@@ -87,6 +87,10 @@ kubectl -n ci get pipelinerun --sort-by=.metadata.creationTimestamp
 kubectl -n ci logs -f deploy/el-github-helm-charts
 ```
 
+### 7) Observe chart publish output
+
+Once a `push` to `main` runs, inspect the pipeline logs for `dist/publish-summary.txt` to confirm chart name, version, and OCI digest were emitted.
+
 ## Examples
 
 - `examples/default-ci.yaml`
