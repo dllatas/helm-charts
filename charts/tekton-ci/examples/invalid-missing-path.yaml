@@ -1,0 +1,8 @@
+triggers:
+  - name: bad
+    repoFullName: org/repo
+    image:
+      reference: harbor.example.com/project/app
+      dockerfile: Dockerfile
+      context: .
+    pathFilters: []

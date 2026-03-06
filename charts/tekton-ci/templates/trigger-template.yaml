@@ -1,0 +1,66 @@
+{{- if .Values.triggerTemplate.create }}
+apiVersion: {{ .Values.apiVersions.triggers }}
+kind: TriggerTemplate
+metadata:
+  name: {{ include "tekton-ci.triggerTemplateName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tekton-ci.commonLabels" . | nindent 4 }}
+spec:
+  params:
+    - name: git-repo-url
+    - name: git-revision
+    - name: git-revision-short
+    - name: branch-name
+    - name: image-reference
+    - name: image-dockerfile
+    - name: image-context
+  resourcetemplates:
+    - apiVersion: {{ .Values.apiVersions.tekton }}
+      kind: PipelineRun
+      metadata:
+        namespace: {{ .Release.Namespace }}
+        generateName: {{ printf "%s-run-" (include "tekton-ci.fullname" .) | quote }}
+      spec:
+        serviceAccountName: {{ .Values.pipeline.serviceAccountName }}
+        pipelineRef:
+          name: {{ include "tekton-ci.pipelineName" . }}
+        podTemplate:
+          securityContext:
+            fsGroup: {{ .Values.run.fsGroup }}
+        workspaces:
+          - name: shared-data
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  {{- range $mode := .Values.run.pvcAccessModes }}
+                  - {{ $mode | quote }}
+                  {{- end }}
+                resources:
+                  requests:
+                    storage: {{ .Values.run.pvcSize }}
+          - name: ssh-creds
+            secret:
+              secretName: {{ .Values.run.sshSecretName }}
+              items:
+                - key: ssh-privatekey
+                  path: id_ssh-key
+                - key: known_hosts
+                  path: known_hosts
+          - name: docker-credentials
+            secret:
+              secretName: {{ .Values.run.dockerSecretName }}
+        params:
+          - name: {{ .Values.pipeline.params.repoUrl }}
+            value: "$(tt.params.git-repo-url)"
+          - name: {{ .Values.pipeline.params.revision }}
+            value: "$(tt.params.git-revision)"
+          - name: {{ .Values.pipeline.params.imageReference }}
+            value: "$(tt.params.image-reference)"
+          - name: {{ .Values.pipeline.params.imageTag }}
+            value: "$(tt.params.branch-name)-$(tt.params.git-revision-short)"
+          - name: {{ .Values.pipeline.params.imageDockerfile }}
+            value: "$(tt.params.image-dockerfile)"
+          - name: {{ .Values.pipeline.params.imageContext }}
+            value: "$(tt.params.image-context)"
+{{- end }}

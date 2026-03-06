@@ -1,0 +1,20 @@
+eventListener:
+  mode: perTrigger
+
+httpRoute:
+  enabled: true
+  parentRefs:
+    - namespace: ingress
+      name: gateway
+  routePathPrefixByTrigger:
+    unknown-trigger: /oops/
+
+triggers:
+  - name: valid
+    repoFullName: org/repo
+    image:
+      reference: harbor.example.com/project/app
+      dockerfile: Dockerfile
+      context: .
+    pathFilters:
+      - ".*"

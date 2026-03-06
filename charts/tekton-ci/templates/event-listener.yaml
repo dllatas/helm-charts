@@ -1,0 +1,76 @@
+{{- define "tekton-ci.eventListenerTrigger" -}}
+{{- $root := .root -}}
+{{- $trigger := .trigger -}}
+- name: {{ $trigger.name }}
+  bindings:
+    - ref: {{ include "tekton-ci.triggerBindingName" $root }}
+    - name: image-reference
+      value: {{ $trigger.image.reference | quote }}
+    - name: image-dockerfile
+      value: {{ $trigger.image.dockerfile | quote }}
+    - name: image-context
+      value: {{ $trigger.image.context | quote }}
+  template:
+    ref: {{ include "tekton-ci.triggerTemplateName" $root }}
+  interceptors:
+    - ref:
+        name: github
+      params:
+        - name: secretRef
+          value:
+            secretName: {{ $root.Values.github.secretName }}
+            secretKey: {{ $root.Values.github.secretKey }}
+        - name: eventTypes
+          value:
+            {{- range $eventType := $root.Values.eventListener.eventTypes }}
+            - {{ $eventType | quote }}
+            {{- end }}
+        {{- if $root.Values.eventListener.includeChangedFiles }}
+        - name: addChangedFiles
+          value:
+            enabled: true
+        {{- end }}
+    - ref:
+        name: cel
+      params:
+        - name: filter
+          value: >
+            {{- include "tekton-ci.celFilter" (dict "root" $root "trigger" $trigger) | nindent 12 }}
+        - name: overlays
+          value:
+            - key: branch_name
+              expression: "body.ref.split('/')[2]"
+            - key: short_sha
+              expression: "body.head_commit.id.truncate(7)"
+{{- end -}}
+
+{{- if eq .Values.eventListener.mode "single" }}
+apiVersion: {{ .Values.apiVersions.triggers }}
+kind: EventListener
+metadata:
+  name: {{ include "tekton-ci.singleListenerName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tekton-ci.commonLabels" . | nindent 4 }}
+spec:
+  serviceAccountName: {{ .Values.eventListener.serviceAccountName }}
+  triggers:
+    {{- range $trigger := .Values.triggers }}
+    {{- include "tekton-ci.eventListenerTrigger" (dict "root" $ "trigger" $trigger) | nindent 4 }}
+    {{- end }}
+{{- else if eq .Values.eventListener.mode "perTrigger" }}
+{{- range $trigger := .Values.triggers }}
+---
+apiVersion: {{ $.Values.apiVersions.triggers }}
+kind: EventListener
+metadata:
+  name: {{ include "tekton-ci.perTriggerListenerName" (dict "root" $ "trigger" $trigger) }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "tekton-ci.commonLabels" $ | nindent 4 }}
+spec:
+  serviceAccountName: {{ $.Values.eventListener.serviceAccountName }}
+  triggers:
+    {{- include "tekton-ci.eventListenerTrigger" (dict "root" $ "trigger" $trigger) | nindent 4 }}
+{{- end }}
+{{- end }}

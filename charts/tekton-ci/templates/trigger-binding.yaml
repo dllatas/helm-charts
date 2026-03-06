@@ -1,0 +1,23 @@
+{{- if .Values.triggerBinding.create }}
+apiVersion: {{ .Values.apiVersions.triggers }}
+kind: TriggerBinding
+metadata:
+  name: {{ include "tekton-ci.triggerBindingName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tekton-ci.commonLabels" . | nindent 4 }}
+spec:
+  params:
+    {{- if .Values.triggerBinding.params }}
+    {{- toYaml .Values.triggerBinding.params | nindent 4 }}
+    {{- else }}
+    - name: git-repo-url
+      value: "$(body.repository.ssh_url)"
+    - name: git-revision
+      value: "$(body.head_commit.id)"
+    - name: git-revision-short
+      value: "$(extensions.short_sha)"
+    - name: branch-name
+      value: "$(extensions.branch_name)"
+    {{- end }}
+{{- end }}

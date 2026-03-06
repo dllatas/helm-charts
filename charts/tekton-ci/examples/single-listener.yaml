@@ -1,0 +1,25 @@
+eventListener:
+  mode: single
+  name: github-hari
+
+github:
+  secretName: github-secret
+  secretKey: secretToken
+
+triggers:
+  - name: manager-api
+    repoFullName: metAleph/sales-coach
+    image:
+      reference: harbor.harokilabs.com/staging/hari-manager-api
+      dockerfile: manager-api/Dockerfile
+      context: .
+    pathFilters:
+      - "manager-api/"
+  - name: convo-api
+    repoFullName: metAleph/sales-coach
+    image:
+      reference: harbor.harokilabs.com/staging/hari-convo-api
+      dockerfile: coach-convo-api/Dockerfile
+      context: .
+    pathFilters:
+      - "coach-convo-api/"

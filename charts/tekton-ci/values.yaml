@@ -1,0 +1,72 @@
+nameOverride: ""
+fullnameOverride: ""
+
+apiVersions:
+  tekton: tekton.dev/v1beta1
+  triggers: triggers.tekton.dev/v1beta1
+  gateway: gateway.networking.k8s.io/v1
+
+taskRefs:
+  clone: git-clone
+  build: buildah
+
+pipeline:
+  name: build
+  serviceAccountName: ci-services
+  builderImage: quay.io/buildah/stable:v1.39.2
+  buildArgs: []
+  params:
+    repoUrl: repo-url
+    revision: revision
+    imageReference: image-reference
+    imageTag: image-tag
+    imageDockerfile: image-dockerfile
+    imageContext: image-context
+
+run:
+  pvcSize: 1Gi
+  pvcAccessModes:
+    - ReadWriteOnce
+  fsGroup: 65532
+  sshSecretName: ssh-key
+  dockerSecretName: docker-credentials
+
+github:
+  secretName: github-secret
+  secretKey: secretToken
+
+eventListener:
+  mode: single
+  name: github-listener
+  serviceAccountName: ci-services
+  eventTypes:
+    - push
+  includeChangedFiles: true
+
+triggerBinding:
+  create: true
+  name: git
+  params: []
+
+triggerTemplate:
+  create: true
+  name: build-template
+
+httpRoute:
+  enabled: false
+  name: tekton-webhook
+  parentRefs: []
+  hostnames: []
+  pathPrefix: /
+  routePathPrefixByTrigger: {}
+
+triggers:
+  - name: sample
+    repoFullName: org/repo
+    image:
+      reference: harbor.example.com/project/sample
+      dockerfile: Dockerfile
+      context: .
+    pathFilters:
+      - ".*"
+    extraCelFilters: []

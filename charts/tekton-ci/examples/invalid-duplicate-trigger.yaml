@@ -1,0 +1,17 @@
+triggers:
+  - name: dup
+    repoFullName: org/repo
+    image:
+      reference: harbor.example.com/project/app-1
+      dockerfile: Dockerfile
+      context: .
+    pathFilters:
+      - ".*"
+  - name: dup
+    repoFullName: org/repo
+    image:
+      reference: harbor.example.com/project/app-2
+      dockerfile: Dockerfile
+      context: .
+    pathFilters:
+      - ".*"

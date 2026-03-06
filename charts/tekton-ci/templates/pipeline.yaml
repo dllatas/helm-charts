@@ -1,0 +1,73 @@
+apiVersion: {{ .Values.apiVersions.tekton }}
+kind: Pipeline
+metadata:
+  name: {{ include "tekton-ci.pipelineName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tekton-ci.commonLabels" . | nindent 4 }}
+spec:
+  description: Generic build pipeline for webhook-triggered image builds.
+  params:
+    - name: {{ .Values.pipeline.params.repoUrl }}
+      type: string
+      description: Git repository URL
+    - name: {{ .Values.pipeline.params.revision }}
+      type: string
+      description: Git revision
+    - name: {{ .Values.pipeline.params.imageReference }}
+      type: string
+    - name: {{ .Values.pipeline.params.imageTag }}
+      type: string
+    - name: {{ .Values.pipeline.params.imageDockerfile }}
+      type: string
+    - name: {{ .Values.pipeline.params.imageContext }}
+      type: string
+  workspaces:
+    - name: shared-data
+      description: Workspace holding cloned repository data.
+    - name: ssh-creds
+      description: SSH credentials for private repository access.
+    - name: docker-credentials
+      description: Registry credentials for image push.
+  tasks:
+    - name: clone-repo
+      taskRef:
+        name: {{ .Values.taskRefs.clone }}
+      workspaces:
+        - name: output
+          workspace: shared-data
+        - name: ssh-directory
+          workspace: ssh-creds
+      params:
+        - name: url
+          value: "$(params.{{ .Values.pipeline.params.repoUrl }})"
+        - name: revision
+          value: "$(params.{{ .Values.pipeline.params.revision }})"
+        - name: deleteExisting
+          value: "true"
+    - name: build-push
+      taskRef:
+        name: {{ .Values.taskRefs.build }}
+      runAfter:
+        - clone-repo
+      workspaces:
+        - name: source
+          workspace: shared-data
+        - name: dockerconfig
+          workspace: docker-credentials
+      params:
+        - name: IMAGE
+          value: "$(params.{{ .Values.pipeline.params.imageReference }}):$(params.{{ .Values.pipeline.params.imageTag }})"
+        - name: DOCKERFILE
+          value: "$(params.{{ .Values.pipeline.params.imageDockerfile }})"
+        - name: CONTEXT
+          value: "$(params.{{ .Values.pipeline.params.imageContext }})"
+        - name: BUILDER_IMAGE
+          value: {{ .Values.pipeline.builderImage | quote }}
+        {{- if .Values.pipeline.buildArgs }}
+        - name: BUILD_ARGS
+          value:
+            {{- range $arg := .Values.pipeline.buildArgs }}
+            - {{ $arg | quote }}
+            {{- end }}
+        {{- end }}

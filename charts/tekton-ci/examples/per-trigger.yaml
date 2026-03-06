@@ -1,0 +1,32 @@
+eventListener:
+  mode: perTrigger
+
+httpRoute:
+  enabled: true
+  name: tekton-github-hari
+  parentRefs:
+    - namespace: ingress
+      name: gateway
+  hostnames:
+    - build.harokilabs.com
+  routePathPrefixByTrigger:
+    manager-api: /hari/manager/
+    convo-api: /hari/convo/
+
+triggers:
+  - name: manager-api
+    repoFullName: metAleph/sales-coach
+    image:
+      reference: harbor.harokilabs.com/staging/hari-manager-api
+      dockerfile: manager-api/Dockerfile
+      context: .
+    pathFilters:
+      - "manager-api/"
+  - name: convo-api
+    repoFullName: metAleph/sales-coach
+    image:
+      reference: harbor.harokilabs.com/staging/hari-convo-api
+      dockerfile: coach-convo-api/Dockerfile
+      context: .
+    pathFilters:
+      - "coach-convo-api/"

@@ -1,0 +1,398 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "apiVersions",
+    "taskRefs",
+    "pipeline",
+    "run",
+    "github",
+    "eventListener",
+    "triggerBinding",
+    "triggerTemplate",
+    "triggers",
+    "httpRoute"
+  ],
+  "properties": {
+    "nameOverride": {
+      "type": "string",
+      "maxLength": 63
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "maxLength": 63
+    },
+    "apiVersions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tekton",
+        "triggers",
+        "gateway"
+      ],
+      "properties": {
+        "tekton": {
+          "type": "string",
+          "enum": [
+            "tekton.dev/v1beta1",
+            "tekton.dev/v1"
+          ]
+        },
+        "triggers": {
+          "type": "string",
+          "enum": [
+            "triggers.tekton.dev/v1beta1",
+            "triggers.tekton.dev/v1"
+          ]
+        },
+        "gateway": {
+          "type": "string",
+          "enum": [
+            "gateway.networking.k8s.io/v1",
+            "gateway.networking.k8s.io/v1beta1"
+          ]
+        }
+      }
+    },
+    "taskRefs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "clone",
+        "build"
+      ],
+      "properties": {
+        "clone": {
+          "type": "string",
+          "minLength": 1
+        },
+        "build": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "pipeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "serviceAccountName",
+        "builderImage",
+        "buildArgs",
+        "params"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+        },
+        "serviceAccountName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "builderImage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "buildArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repoUrl",
+            "revision",
+            "imageReference",
+            "imageTag",
+            "imageDockerfile",
+            "imageContext"
+          ],
+          "properties": {
+            "repoUrl": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "string",
+              "minLength": 1
+            },
+            "imageReference": {
+              "type": "string",
+              "minLength": 1
+            },
+            "imageTag": {
+              "type": "string",
+              "minLength": 1
+            },
+            "imageDockerfile": {
+              "type": "string",
+              "minLength": 1
+            },
+            "imageContext": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pvcSize",
+        "pvcAccessModes",
+        "fsGroup",
+        "sshSecretName",
+        "dockerSecretName"
+      ],
+      "properties": {
+        "pvcSize": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pvcAccessModes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "fsGroup": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sshSecretName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dockerSecretName": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "github": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "secretName",
+        "secretKey"
+      ],
+      "properties": {
+        "secretName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "secretKey": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "eventListener": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "name",
+        "serviceAccountName",
+        "eventTypes",
+        "includeChangedFiles"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "single",
+            "perTrigger"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+        },
+        "serviceAccountName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eventTypes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "includeChangedFiles": {
+          "type": "boolean"
+        }
+      }
+    },
+    "triggerBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "create",
+        "name",
+        "params"
+      ],
+      "properties": {
+        "create": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+        },
+        "params": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "triggerTemplate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "create",
+        "name"
+      ],
+      "properties": {
+        "create": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+        }
+      }
+    },
+    "httpRoute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "name",
+        "parentRefs",
+        "hostnames",
+        "pathPrefix",
+        "routePathPrefixByTrigger"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+        },
+        "parentRefs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "hostnames": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "pathPrefix": {
+          "type": "string",
+          "minLength": 1
+        },
+        "routePathPrefixByTrigger": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "triggers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "repoFullName",
+          "image",
+          "pathFilters"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+          },
+          "repoFullName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "image": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reference",
+              "dockerfile",
+              "context"
+            ],
+            "properties": {
+              "reference": {
+                "type": "string",
+                "minLength": 1
+              },
+              "dockerfile": {
+                "type": "string",
+                "minLength": 1
+              },
+              "context": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "pathFilters": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "extraCelFilters": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}
