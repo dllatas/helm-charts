@@ -26,10 +26,46 @@ if ! command -v helm >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! command -v kubeconform >/dev/null 2>&1; then
-  echo "kubeconform command not found" >&2
-  exit 1
-fi
+ensure_kubeconform() {
+  if command -v kubeconform >/dev/null 2>&1; then
+    return 0
+  fi
+
+  if ! command -v curl >/dev/null 2>&1; then
+    echo "kubeconform command not found and curl is unavailable for bootstrap" >&2
+    exit 1
+  fi
+
+  local os arch version archive_url install_dir archive
+  os="$(uname -s | tr '[:upper:]' '[:lower:]')"
+  arch="$(uname -m)"
+  case "$arch" in
+    x86_64|amd64) arch="amd64" ;;
+    arm64|aarch64) arch="arm64" ;;
+    *)
+      echo "Unsupported architecture for kubeconform bootstrap: $arch" >&2
+      exit 1
+      ;;
+  esac
+
+  version="${KUBECONFORM_VERSION:-v0.6.7}"
+  archive_url="https://github.com/yannh/kubeconform/releases/download/${version}/kubeconform-${os}-${arch}.tar.gz"
+  install_dir="$TMP_DIR/bin"
+  archive="$TMP_DIR/kubeconform.tar.gz"
+
+  mkdir -p "$install_dir"
+  curl -fsSL "$archive_url" -o "$archive"
+  tar -xzf "$archive" -C "$install_dir" kubeconform
+  chmod +x "$install_dir/kubeconform"
+  export PATH="$install_dir:$PATH"
+
+  if ! command -v kubeconform >/dev/null 2>&1; then
+    echo "Failed to bootstrap kubeconform from $archive_url" >&2
+    exit 1
+  fi
+}
+
+ensure_kubeconform
 
 helm lint --strict "$CHART_DIR"
 

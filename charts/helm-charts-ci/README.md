@@ -31,6 +31,8 @@ Bootstrap chart for this repository CI/CD flow on Tekton.
 helm upgrade --install helm-charts-ci ./charts/helm-charts-ci -n ci
 ```
 
+Default `pipeline.toolsImage` is `quay.io/helmpack/chart-testing:v3.14.0`.
+
 ## Deploy Flow
 
 ### 1) Bootstrap Harbor + publish secret (OpenTofu)

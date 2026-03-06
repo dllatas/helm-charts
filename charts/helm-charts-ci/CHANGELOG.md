@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3
+
+- Changed default `pipeline.toolsImage` to `quay.io/helmpack/chart-testing:v3.14.0` (public and pullable from the cluster).
+- Added `kubeconform` auto-bootstrap in `ci/scripts/validate-chart.sh` when the binary is not present in the tools image.
+
 ## 0.1.2
 
 - Changed default GitHub repository filter to `dllatas/helm-charts`.
