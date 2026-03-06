@@ -1,0 +1,24 @@
+# Helm packaging artifacts
+*.tgz
+**/charts/*.tgz
+dist/
+
+# Downloaded local installer scripts
+get_helm.sh
+
+# IDE/editor files
+.idea/
+.vscode/
+.project
+.settings/
+*.iml
+.history
+
+# macOS metadata
+.DS_Store
+._*
+
+# Common editor backups
+*~
+\#*\#
+.\#*
