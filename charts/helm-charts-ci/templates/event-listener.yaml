@@ -42,7 +42,7 @@ spec:
                 - key: revision
                   expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.head.sha : body.head_commit.id"
                 - key: base_ref
-                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.base.sha : 'origin/main'"
+                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.base.sha : 'origin/{{ .Values.publish.targetBranch }}'"
                 - key: head_ref
                   expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.head.sha : body.head_commit.id"
                 - key: branch_name

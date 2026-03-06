@@ -15,7 +15,7 @@ Bootstrap chart for this repository CI/CD flow on Tekton.
 - Validates changed charts on `push` and `pull_request` events.
 - Publishes changed charts to Harbor OCI only when:
   - event type is `push`
-  - target branch matches `publish.targetBranch` (default `main`)
+  - target branch matches `publish.targetBranch` (default `master`)
 
 ## Prerequisites
 
@@ -92,7 +92,7 @@ kubectl -n ci logs -f deploy/el-github-helm-charts
 
 ### 7) Observe chart publish output
 
-Once a `push` to `main` runs, inspect the pipeline logs for `dist/publish-summary.txt` to confirm chart name, version, and OCI digest were emitted.
+Once a `push` to `master` runs, inspect the pipeline logs for `dist/publish-summary.txt` to confirm chart name, version, and OCI digest were emitted.
 
 ## Examples
 

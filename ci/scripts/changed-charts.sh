@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BASE_REF="${BASE_REF:-origin/main}"
+BASE_REF="${BASE_REF:-origin/master}"
 HEAD_REF="${HEAD_REF:-HEAD}"
 
 if [[ -n "${BASE_SHA:-}" ]]; then
@@ -13,7 +13,7 @@ if [[ -n "${HEAD_SHA:-}" ]]; then
 fi
 
 if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then
-  git fetch origin main >/dev/null 2>&1 || true
+  git fetch origin master >/dev/null 2>&1 || true
 fi
 
 if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then

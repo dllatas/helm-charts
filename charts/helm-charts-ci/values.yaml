@@ -14,7 +14,7 @@ pipeline:
 
 publish:
   enabled: true
-  targetBranch: main
+  targetBranch: master
   secretName: helm-charts-publish
   secretKeys:
     harborRepo: harbor_oci_repo
