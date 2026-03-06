@@ -1,0 +1,30 @@
+containers:
+  - name: app
+    image: ghcr.io/nginx/nginx-unprivileged:1.27
+    ports:
+      - name: http
+        containerPort: 8080
+
+services:
+  - name: web
+    ports:
+      - name: http
+        port: 80
+        targetPort: http
+
+httpRoutes:
+  - name: public
+    parentRefs:
+      - name: shared-gateway
+        namespace: ingress-system
+        sectionName: http
+    hostnames:
+      - app.example.com
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+        backendRefs:
+          - service: web
+            port: 80

@@ -1,0 +1,54 @@
+{{- $containerPortNames := dict -}}
+{{- range $container := .Values.containers }}
+{{- range $port := $container.ports }}
+{{- if hasKey $containerPortNames $port.name }}
+{{- fail (printf "duplicate container port name %q across containers; port names must be unique for service targetPort mapping" $port.name) }}
+{{- end }}
+{{- $_ := set $containerPortNames $port.name true -}}
+{{- end }}
+{{- end }}
+
+{{- $serviceNames := dict -}}
+{{- range $service := .Values.services }}
+{{- if hasKey $serviceNames $service.name }}
+{{- fail (printf "duplicate service name %q in services[]" $service.name) }}
+{{- end }}
+{{- $_ := set $serviceNames $service.name true -}}
+{{- range $port := $service.ports }}
+{{- if not (hasKey $containerPortNames $port.targetPort) }}
+{{- fail (printf "service %q references unknown targetPort %q; define a matching containers[].ports[].name" $service.name $port.targetPort) }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- range $service := .Values.services }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ printf "%s-%s" (include "application.fullname" $) $service.name | trunc 63 | trimSuffix "-" }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "application.commonLabels" $ | nindent 4 }}
+    {{- with $service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with $service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ default "ClusterIP" $service.type }}
+  selector:
+    {{- include "application.selectorLabels" $ | nindent 4 }}
+  ports:
+    {{- range $port := $service.ports }}
+    - name: {{ $port.name }}
+      port: {{ $port.port }}
+      targetPort: {{ $port.targetPort }}
+      protocol: {{ default "TCP" $port.protocol }}
+      {{- if hasKey $port "appProtocol" }}
+      appProtocol: {{ $port.appProtocol }}
+      {{- end }}
+    {{- end }}
+{{- end }}

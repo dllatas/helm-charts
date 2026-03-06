@@ -1,0 +1,23 @@
+containers:
+  - name: app
+    image: ghcr.io/nginx/nginx-unprivileged:1.27
+    ports:
+      - name: http
+        containerPort: 8080
+      - name: metrics
+        containerPort: 9090
+  - name: worker
+    image: busybox:1.36
+    command: ["sh", "-c", "sleep 3600"]
+
+services:
+  - name: web
+    ports:
+      - name: http
+        port: 80
+        targetPort: http
+  - name: metrics
+    ports:
+      - name: metrics
+        port: 9090
+        targetPort: metrics

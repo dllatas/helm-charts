@@ -1,0 +1,3 @@
+containers:
+  - name: app
+    image: ghcr.io/nginx/nginx-unprivileged:1.27

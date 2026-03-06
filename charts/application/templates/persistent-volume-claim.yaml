@@ -1,0 +1,36 @@
+{{- $pvcNames := dict -}}
+{{- range $pvc := .Values.persistentVolumeClaims }}
+{{- if hasKey $pvcNames $pvc.name }}
+{{- fail (printf "duplicate persistentVolumeClaims entry %q" $pvc.name) }}
+{{- end }}
+{{- $_ := set $pvcNames $pvc.name true -}}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "%s-%s" (include "application.fullname" $) $pvc.name | trunc 63 | trimSuffix "-" }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "application.commonLabels" $ | nindent 4 }}
+    {{- with $pvc.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with $pvc.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- range $mode := $pvc.accessModes }}
+    - {{ $mode }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ $pvc.size }}
+  {{- if hasKey $pvc "storageClassName" }}
+  storageClassName: {{ $pvc.storageClassName | quote }}
+  {{- end }}
+  {{- if hasKey $pvc "volumeMode" }}
+  volumeMode: {{ $pvc.volumeMode }}
+  {{- end }}
+{{- end }}

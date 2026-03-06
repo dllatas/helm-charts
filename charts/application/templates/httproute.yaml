@@ -1,0 +1,69 @@
+{{- $serviceNames := dict -}}
+{{- $servicePortMap := dict -}}
+{{- range $service := .Values.services }}
+{{- if hasKey $serviceNames $service.name }}
+{{- fail (printf "duplicate service name %q in services[]" $service.name) }}
+{{- end }}
+{{- $_ := set $serviceNames $service.name true -}}
+{{- range $port := $service.ports }}
+{{- $_ := set $servicePortMap (printf "%s:%v" $service.name $port.port) true -}}
+{{- end }}
+{{- end }}
+
+{{- $routeNames := dict -}}
+{{- range $route := .Values.httpRoutes }}
+{{- if hasKey $routeNames $route.name }}
+{{- fail (printf "duplicate HTTPRoute name %q in httpRoutes[]" $route.name) }}
+{{- end }}
+{{- $_ := set $routeNames $route.name true -}}
+{{- range $rule := $route.rules }}
+{{- range $backend := $rule.backendRefs }}
+{{- if not (hasKey $serviceNames $backend.service) }}
+{{- fail (printf "HTTPRoute %q references unknown service %q in backendRefs" $route.name $backend.service) }}
+{{- end }}
+{{- if not (hasKey $servicePortMap (printf "%s:%v" $backend.service $backend.port)) }}
+{{- fail (printf "HTTPRoute %q backend service %q does not expose port %v" $route.name $backend.service $backend.port) }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- range $route := .Values.httpRoutes }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ printf "%s-%s" (include "application.fullname" $) $route.name | trunc 63 | trimSuffix "-" }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "application.commonLabels" $ | nindent 4 }}
+spec:
+  parentRefs:
+    {{- toYaml $route.parentRefs | nindent 4 }}
+  {{- with $route.hostnames }}
+  hostnames:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  rules:
+    {{- range $rule := $route.rules }}
+    - {{- with $rule.matches }}
+      matches:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $rule.filters }}
+      filters:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      backendRefs:
+        {{- range $backend := $rule.backendRefs }}
+        - name: {{ printf "%s-%s" (include "application.fullname" $) $backend.service | trunc 63 | trimSuffix "-" }}
+          port: {{ $backend.port }}
+          {{- if hasKey $backend "weight" }}
+          weight: {{ $backend.weight }}
+          {{- end }}
+          {{- if hasKey $backend "namespace" }}
+          namespace: {{ $backend.namespace }}
+          {{- end }}
+        {{- end }}
+    {{- end }}
+{{- end }}

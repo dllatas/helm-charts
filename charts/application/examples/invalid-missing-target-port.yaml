@@ -1,0 +1,13 @@
+containers:
+  - name: app
+    image: ghcr.io/nginx/nginx-unprivileged:1.27
+    ports:
+      - name: http
+        containerPort: 8080
+
+services:
+  - name: web
+    ports:
+      - name: bad
+        port: 80
+        targetPort: missing

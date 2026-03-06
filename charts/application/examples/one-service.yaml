@@ -1,0 +1,14 @@
+containers:
+  - name: app
+    image: ghcr.io/nginx/nginx-unprivileged:1.27
+    ports:
+      - name: http
+        containerPort: 8080
+
+services:
+  - name: web
+    type: ClusterIP
+    ports:
+      - name: http
+        port: 80
+        targetPort: http

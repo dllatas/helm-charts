@@ -1,0 +1,42 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+
+# Optional annotations/labels
+deploymentAnnotations: {}
+podAnnotations: {}
+podLabels: {}
+
+# Optional pod-level settings
+imagePullSecrets: []
+serviceAccountName: ""
+podSecurityContext: {}
+
+containers:
+  - name: app
+    image: nginx:1.27.4
+    imagePullPolicy: IfNotPresent
+    ports: []
+    command: []
+    args: []
+    env: []
+    resources: {}
+    securityContext: {}
+    volumeMounts: []
+    readinessProbe: {}
+    livenessProbe: {}
+
+# Explicit services only. No implicit service generation.
+services: []
+
+# Gateway API HTTPRoute resources (gateway.networking.k8s.io/v1)
+httpRoutes: []
+
+pdb:
+  enabled: false
+  # minAvailable: 1
+  # maxUnavailable: "50%"
+
+# PVCs created by the chart. Mount by referencing pvc.name in container.volumeMounts[].name.
+persistentVolumeClaims: []

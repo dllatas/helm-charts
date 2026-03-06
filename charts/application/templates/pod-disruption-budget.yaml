@@ -1,0 +1,27 @@
+{{- if .Values.pdb.enabled }}
+{{- $hasMin := hasKey .Values.pdb "minAvailable" -}}
+{{- $hasMax := hasKey .Values.pdb "maxUnavailable" -}}
+{{- if and $hasMin $hasMax }}
+{{- fail "pdb: set only one of minAvailable or maxUnavailable" }}
+{{- end }}
+{{- if and (not $hasMin) (not $hasMax) }}
+{{- fail "pdb: when enabled, one of minAvailable or maxUnavailable must be set" }}
+{{- end }}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "application.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "application.commonLabels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "application.selectorLabels" . | nindent 6 }}
+  {{- if $hasMin }}
+  minAvailable: {{ .Values.pdb.minAvailable | quote }}
+  {{- else }}
+  maxUnavailable: {{ .Values.pdb.maxUnavailable | quote }}
+  {{- end }}
+{{- end }}

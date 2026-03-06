@@ -1,0 +1,126 @@
+{{- $pvcNames := dict -}}
+{{- range $pvc := .Values.persistentVolumeClaims }}
+{{- if hasKey $pvcNames $pvc.name }}
+{{- fail (printf "duplicate persistentVolumeClaims entry %q" $pvc.name) }}
+{{- end }}
+{{- $_ := set $pvcNames $pvc.name true -}}
+{{- end }}
+
+{{- range $container := .Values.containers }}
+{{- range $mount := $container.volumeMounts }}
+{{- if not (hasKey $pvcNames $mount.name) }}
+{{- fail (printf "container %q references unknown volumeMount %q; define it in persistentVolumeClaims[]" $container.name $mount.name) }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "application.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "application.commonLabels" . | nindent 4 }}
+  {{- with .Values.deploymentAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "application.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "application.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- if .Values.serviceAccountName }}
+      serviceAccountName: {{ .Values.serviceAccountName }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.persistentVolumeClaims }}
+      volumes:
+        {{- range $pvc := .Values.persistentVolumeClaims }}
+        - name: {{ $pvc.name }}
+          persistentVolumeClaim:
+            claimName: {{ printf "%s-%s" (include "application.fullname" $) $pvc.name | trunc 63 | trimSuffix "-" }}
+        {{- end }}
+      {{- end }}
+      containers:
+        {{- range $container := .Values.containers }}
+        - name: {{ $container.name }}
+          image: {{ $container.image }}
+          imagePullPolicy: {{ default "IfNotPresent" $container.imagePullPolicy }}
+          {{- with $container.command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $container.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $container.ports }}
+          ports:
+            {{- range $port := . }}
+            - name: {{ $port.name }}
+              containerPort: {{ $port.containerPort }}
+              protocol: {{ default "TCP" $port.protocol }}
+            {{- end }}
+          {{- end }}
+          {{- with $container.env }}
+          env:
+            {{- range $env := . }}
+            - name: {{ $env.name }}
+              {{- if hasKey $env "value" }}
+              value: {{ $env.value | quote }}
+              {{- else }}
+              valueFrom:
+                {{- toYaml $env.valueFrom | nindent 16 }}
+              {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- with $container.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $container.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $container.volumeMounts }}
+          volumeMounts:
+            {{- range $mount := . }}
+            - name: {{ $mount.name }}
+              mountPath: {{ $mount.mountPath }}
+              {{- if hasKey $mount "subPath" }}
+              subPath: {{ $mount.subPath }}
+              {{- end }}
+              {{- if hasKey $mount "readOnly" }}
+              readOnly: {{ $mount.readOnly }}
+              {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- with $container.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $container.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        {{- end }}
