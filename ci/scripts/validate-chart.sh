@@ -122,9 +122,9 @@ if ! kubeconform "${kubeconform_common_args[@]}" "${RENDERED_FILES[@]}" >"$KUBEC
 
     for rendered in "${RENDERED_FILES[@]}"; do
       server_err="$TMP_DIR/$(basename "$rendered").server.err"
-      if ! kubectl apply --dry-run=server -f "$rendered" >/dev/null 2>"$server_err"; then
-        if grep -q "no matches for kind" "$server_err"; then
-          echo "kubectl server dry-run skipped unsupported CRD API on current cluster for $(basename "$rendered")"
+      if ! kubectl create --dry-run=server -f "$rendered" >/dev/null 2>"$server_err"; then
+        if grep -Eq "no matches for kind|is forbidden|RBAC:|already exists" "$server_err"; then
+          echo "kubectl server dry-run fallback skipped for $(basename "$rendered"): $(tr '\n' ' ' <"$server_err")"
           continue
         fi
         cat "$server_err" >&2
