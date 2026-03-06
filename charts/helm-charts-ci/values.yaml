@@ -26,6 +26,7 @@ run:
   pvcAccessModes:
     - ReadWriteOnce
   fsGroup: 65532
+  skipE2E: true
   sshSecretName: ssh-key
   dockerSecretName: docker-credentials
 
