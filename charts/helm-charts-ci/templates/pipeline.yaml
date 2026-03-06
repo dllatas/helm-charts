@@ -54,6 +54,9 @@ spec:
           - name: validate
             image: {{ .Values.pipeline.toolsImage | quote }}
             workingDir: $(workspaces.source.path)
+            env:
+              - name: SKIP_E2E
+                value: {{ .Values.run.skipE2E | quote }}
             script: |
               #!/usr/bin/env bash
               set -euo pipefail
