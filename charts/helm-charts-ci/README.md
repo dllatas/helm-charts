@@ -71,7 +71,7 @@ helm -n ci status helm-charts-ci
 
 ### 5) Configure GitHub webhook
 
-Configure a repository webhook for `haroki/helm-charts`:
+Configure a repository webhook for `dllatas/helm-charts`:
 
 - URL: `https://build.harokilabs.com/charts/`
 - Content type: `application/json`

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+- Changed default GitHub repository filter to `dllatas/helm-charts`.
+- Updated examples and deployment docs to match the default repository filter.
+
 ## 0.1.1
 
 - Docs: added explicit step to verify publish summary output from the pipeline logs.

@@ -45,7 +45,7 @@ github:
   eventTypes:
     - push
     - pull_request
-  repositoryFullName: haroki/helm-charts
+  repositoryFullName: dllatas/helm-charts
   extraFilter: ""
 
 httpRoute:

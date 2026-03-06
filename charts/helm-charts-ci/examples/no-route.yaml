@@ -2,4 +2,4 @@ httpRoute:
   enabled: false
 
 github:
-  repositoryFullName: haroki/helm-charts
+  repositoryFullName: dllatas/helm-charts
