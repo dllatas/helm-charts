@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5
+
+- Changed default publish branch to `master`.
+- Updated EventListener push overlay to emit `base_ref=origin/<publish.targetBranch>` for non-PR events.
+- Aligned local CI script base branch defaults to `origin/master`.
+
 ## 0.1.4
 
 - Added `run.skipE2E` (default `true`) and wired it to `SKIP_E2E` in the validate task.

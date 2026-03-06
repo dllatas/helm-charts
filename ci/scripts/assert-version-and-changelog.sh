@@ -10,7 +10,7 @@ CHART="$1"
 CHART_DIR="charts/$CHART"
 CHART_YAML="$CHART_DIR/Chart.yaml"
 CHANGELOG="$CHART_DIR/CHANGELOG.md"
-BASE_REF="${BASE_REF:-origin/main}"
+BASE_REF="${BASE_REF:-origin/master}"
 
 if [[ ! -f "$CHART_YAML" ]]; then
   echo "Missing $CHART_YAML" >&2
