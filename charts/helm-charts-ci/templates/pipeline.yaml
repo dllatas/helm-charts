@@ -1,0 +1,118 @@
+apiVersion: {{ .Values.apiVersions.tekton }}
+kind: Pipeline
+metadata:
+  name: {{ .Values.pipeline.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "helm-charts-ci.commonLabels" . | nindent 4 }}
+spec:
+  description: Validate changed charts on PR/push and publish to Harbor on main pushes.
+  params:
+    - name: repo-url
+      type: string
+    - name: revision
+      type: string
+    - name: base-ref
+      type: string
+    - name: head-ref
+      type: string
+    - name: event-type
+      type: string
+    - name: branch-name
+      type: string
+  workspaces:
+    - name: source
+    - name: ssh-creds
+    - name: docker-credentials
+  tasks:
+    - name: clone-repo
+      taskRef:
+        name: {{ .Values.pipeline.cloneTaskRef }}
+      workspaces:
+        - name: output
+          workspace: source
+        - name: ssh-directory
+          workspace: ssh-creds
+      params:
+        - name: url
+          value: "$(params.repo-url)"
+        - name: revision
+          value: "$(params.revision)"
+        - name: deleteExisting
+          value: "true"
+
+    - name: validate
+      runAfter:
+        - clone-repo
+      taskSpec:
+        workspaces:
+          - name: source
+        params:
+          - name: base-ref
+          - name: head-ref
+        steps:
+          - name: validate
+            image: {{ .Values.pipeline.toolsImage | quote }}
+            workingDir: $(workspaces.source.path)
+            script: |
+              #!/usr/bin/env bash
+              set -euo pipefail
+              export BASE_REF="$(params.base-ref)"
+              export HEAD_REF="$(params.head-ref)"
+              ./ci/scripts/run-validation.sh
+      workspaces:
+        - name: source
+          workspace: source
+      params:
+        - name: base-ref
+          value: "$(params.base-ref)"
+        - name: head-ref
+          value: "$(params.head-ref)"
+
+    {{- if .Values.publish.enabled }}
+    - name: publish
+      runAfter:
+        - validate
+      when:
+        - input: "$(params.event-type)"
+          operator: in
+          values:
+            - "push"
+        - input: "$(params.branch-name)"
+          operator: in
+          values:
+            - {{ .Values.publish.targetBranch | quote }}
+      taskSpec:
+        workspaces:
+          - name: source
+          - name: docker-credentials
+        steps:
+          - name: publish
+            image: {{ .Values.pipeline.toolsImage | quote }}
+            workingDir: $(workspaces.source.path)
+            env:
+              - name: HARBOR_OCI_REPO
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.publish.secretName }}
+                    key: {{ .Values.publish.secretKeys.harborRepo }}
+              - name: HARBOR_USERNAME
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.publish.secretName }}
+                    key: {{ .Values.publish.secretKeys.harborUsername }}
+              - name: HARBOR_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.publish.secretName }}
+                    key: {{ .Values.publish.secretKeys.harborPassword }}
+            script: |
+              #!/usr/bin/env bash
+              set -euo pipefail
+              ./ci/scripts/publish-charts.sh
+      workspaces:
+        - name: source
+          workspace: source
+        - name: docker-credentials
+          workspace: docker-credentials
+    {{- end }}

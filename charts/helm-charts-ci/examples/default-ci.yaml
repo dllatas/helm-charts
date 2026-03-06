@@ -1,0 +1,11 @@
+github:
+  repositoryFullName: haroki/helm-charts
+
+httpRoute:
+  enabled: true
+  parentRefs:
+    - namespace: ingress
+      name: gateway
+  hostnames:
+    - build.harokilabs.com
+  pathPrefix: /charts/

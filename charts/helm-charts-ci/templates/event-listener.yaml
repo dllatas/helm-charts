@@ -1,0 +1,49 @@
+apiVersion: {{ .Values.apiVersions.triggers }}
+kind: EventListener
+metadata:
+  name: {{ .Values.eventListener.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "helm-charts-ci.commonLabels" . | nindent 4 }}
+spec:
+  serviceAccountName: {{ .Values.eventListener.serviceAccountName }}
+  triggers:
+    - name: {{ include "helm-charts-ci.fullname" . }}
+      bindings:
+        - ref: {{ .Values.triggerBinding.name }}
+      template:
+        ref: {{ .Values.triggerTemplate.name }}
+      interceptors:
+        - ref:
+            name: github
+          params:
+            - name: secretRef
+              value:
+                secretName: {{ .Values.github.secretName }}
+                secretKey: {{ .Values.github.secretKey }}
+            - name: eventTypes
+              value:
+                {{- range $eventType := .Values.github.eventTypes }}
+                - {{ $eventType | quote }}
+                {{- end }}
+        - ref:
+            name: cel
+          params:
+            - name: filter
+              value: >
+                body.repository.full_name == '{{ .Values.github.repositoryFullName }}'
+                {{- if .Values.github.extraFilter }}
+                && ({{ .Values.github.extraFilter }})
+                {{- end }}
+            - name: overlays
+              value:
+                - key: event_type
+                  expression: "header.canonical('X-GitHub-Event')"
+                - key: revision
+                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.head.sha : body.head_commit.id"
+                - key: base_ref
+                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.base.sha : 'origin/main'"
+                - key: head_ref
+                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.head.sha : body.head_commit.id"
+                - key: branch_name
+                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.base.ref : body.ref.split('/')[2]"

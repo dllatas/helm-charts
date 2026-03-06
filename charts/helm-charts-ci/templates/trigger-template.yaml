@@ -1,0 +1,63 @@
+apiVersion: {{ .Values.apiVersions.triggers }}
+kind: TriggerTemplate
+metadata:
+  name: {{ .Values.triggerTemplate.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "helm-charts-ci.commonLabels" . | nindent 4 }}
+spec:
+  params:
+    - name: repo-url
+    - name: revision
+    - name: base-ref
+    - name: head-ref
+    - name: event-type
+    - name: branch-name
+  resourcetemplates:
+    - apiVersion: {{ .Values.apiVersions.tekton }}
+      kind: PipelineRun
+      metadata:
+        namespace: {{ .Release.Namespace }}
+        generateName: {{ printf "%s-" .Values.pipeline.name | quote }}
+      spec:
+        serviceAccountName: {{ .Values.pipeline.serviceAccountName }}
+        pipelineRef:
+          name: {{ .Values.pipeline.name }}
+        podTemplate:
+          securityContext:
+            fsGroup: {{ .Values.run.fsGroup }}
+        workspaces:
+          - name: source
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  {{- range $mode := .Values.run.pvcAccessModes }}
+                  - {{ $mode | quote }}
+                  {{- end }}
+                resources:
+                  requests:
+                    storage: {{ .Values.run.pvcSize }}
+          - name: ssh-creds
+            secret:
+              secretName: {{ .Values.run.sshSecretName }}
+              items:
+                - key: ssh-privatekey
+                  path: id_ssh-key
+                - key: known_hosts
+                  path: known_hosts
+          - name: docker-credentials
+            secret:
+              secretName: {{ .Values.run.dockerSecretName }}
+        params:
+          - name: repo-url
+            value: "$(tt.params.repo-url)"
+          - name: revision
+            value: "$(tt.params.revision)"
+          - name: base-ref
+            value: "$(tt.params.base-ref)"
+          - name: head-ref
+            value: "$(tt.params.head-ref)"
+          - name: event-type
+            value: "$(tt.params.event-type)"
+          - name: branch-name
+            value: "$(tt.params.branch-name)"

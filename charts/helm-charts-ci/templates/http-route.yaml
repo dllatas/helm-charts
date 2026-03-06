@@ -1,0 +1,24 @@
+{{- if .Values.httpRoute.enabled }}
+apiVersion: {{ .Values.apiVersions.gateway }}
+kind: HTTPRoute
+metadata:
+  name: {{ .Values.httpRoute.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "helm-charts-ci.commonLabels" . | nindent 4 }}
+spec:
+  parentRefs:
+    {{- toYaml .Values.httpRoute.parentRefs | nindent 4 }}
+  {{- with .Values.httpRoute.hostnames }}
+  hostnames:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: {{ .Values.httpRoute.pathPrefix | quote }}
+      backendRefs:
+        - name: {{ printf "el-%s" .Values.eventListener.name | trunc 63 | trimSuffix "-" }}
+          port: 8080
+{{- end }}

@@ -1,0 +1,21 @@
+apiVersion: {{ .Values.apiVersions.triggers }}
+kind: TriggerBinding
+metadata:
+  name: {{ .Values.triggerBinding.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "helm-charts-ci.commonLabels" . | nindent 4 }}
+spec:
+  params:
+    - name: repo-url
+      value: "$(body.repository.ssh_url)"
+    - name: revision
+      value: "$(extensions.revision)"
+    - name: base-ref
+      value: "$(extensions.base_ref)"
+    - name: head-ref
+      value: "$(extensions.head_ref)"
+    - name: event-type
+      value: "$(extensions.event_type)"
+    - name: branch-name
+      value: "$(extensions.branch_name)"
