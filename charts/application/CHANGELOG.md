@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.1
+
+- Release bump to publish the initial `application` chart package to OCI.
+
 ## 3.0.0
 
 - Rebuilt chart for Helm v4-compatible workflows.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- Release bump to publish the initial `tekton-ci` chart package to OCI.
+
 ## 0.1.0
 
 - Added initial Tekton CI meta-chart.
