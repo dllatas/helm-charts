@@ -51,5 +51,5 @@ if ! resolve_ref "$HEAD_REF"; then
 fi
 
 git diff --name-only "$BASE_REF...$HEAD_REF" \
-  | awk -F/ '/^charts\/[^/]+\// {print $2}' \
+  | awk -F/ '$1 == "charts" && $2 != "" {print $2}' \
   | sort -u
