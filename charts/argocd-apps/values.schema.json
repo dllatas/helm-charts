@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersions", "defaults", "applications"],
+  "properties": {
+    "nameOverride": {"type": "string", "maxLength": 63},
+    "fullnameOverride": {"type": "string", "maxLength": 63},
+    "apiVersions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["argocd"],
+      "properties": {
+        "argocd": {"type": "string", "enum": ["argoproj.io/v1alpha1"]}
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["namespace", "project", "destinationServer"],
+      "properties": {
+        "namespace": {"type": "string", "minLength": 1},
+        "project": {"type": "string", "minLength": 1},
+        "destinationServer": {"type": "string", "minLength": 1},
+        "syncPolicy": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "applications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "source", "destination"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
+          },
+          "namespace": {"type": "string", "minLength": 1},
+          "project": {"type": "string", "minLength": 1},
+          "labels": {
+            "type": "object",
+            "additionalProperties": {"type": "string"}
+          },
+          "annotations": {
+            "type": "object",
+            "additionalProperties": {"type": "string"}
+          },
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["repoURL", "targetRevision"],
+            "properties": {
+              "repoURL": {"type": "string", "minLength": 1},
+              "targetRevision": {"type": "string", "minLength": 1},
+              "path": {"type": "string", "minLength": 1},
+              "chart": {"type": "string", "minLength": 1},
+              "helm": {"type": "object", "additionalProperties": true}
+            },
+            "anyOf": [
+              {"required": ["path"]},
+              {"required": ["chart"]}
+            ]
+          },
+          "destination": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["namespace"],
+            "properties": {
+              "server": {"type": "string", "minLength": 1},
+              "namespace": {"type": "string", "minLength": 1}
+            }
+          },
+          "syncPolicy": {"type": "object", "additionalProperties": true},
+          "ignoreDifferences": {
+            "type": "array",
+            "items": {"type": "object", "additionalProperties": true}
+          },
+          "info": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name", "value"],
+              "properties": {
+                "name": {"type": "string", "minLength": 1},
+                "value": {"type": "string"}
+              }
+            }
+          },
+          "revisionHistoryLimit": {"type": "integer", "minimum": 1}
+        }
+      }
+    }
+  }
+}

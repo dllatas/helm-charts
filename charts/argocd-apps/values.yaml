@@ -1,0 +1,16 @@
+nameOverride: ""
+fullnameOverride: ""
+
+apiVersions:
+  argocd: argoproj.io/v1alpha1
+
+defaults:
+  namespace: argocd
+  project: default
+  destinationServer: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
+applications: []

@@ -40,6 +40,7 @@ v4.x.x+...
 - This repository targets Helm v4 for chart authoring and validation.
 - Charts currently included:
   - `charts/application`
+  - `charts/argocd-apps`
   - `charts/tekton-ci`
   - `charts/helm-charts-ci`
 
