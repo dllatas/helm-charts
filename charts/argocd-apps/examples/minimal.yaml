@@ -1,0 +1,15 @@
+applications:
+  - name: helm-charts-ci
+    source:
+      repoURL: https://github.com/dllatas/helm-charts.git
+      targetRevision: master
+      path: charts/helm-charts-ci
+      helm:
+        releaseName: helm-charts-ci
+        values: |
+          github:
+            repositoryFullName: dllatas/helm-charts
+          publish:
+            targetBranch: master
+    destination:
+      namespace: ci

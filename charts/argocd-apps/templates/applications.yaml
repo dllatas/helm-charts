@@ -1,0 +1,54 @@
+{{- range $idx, $app := .Values.applications }}
+---
+apiVersion: {{ $.Values.apiVersions.argocd }}
+kind: Application
+metadata:
+  name: {{ $app.name }}
+  namespace: {{ default $.Values.defaults.namespace $app.namespace }}
+  labels:
+    {{- include "argocd-apps.commonLabels" $ | nindent 4 }}
+    app.kubernetes.io/component: "argocd-application"
+    {{- with $app.labels }}
+{{ toYaml . | indent 4 }}
+    {{- end }}
+  {{- with $app.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+spec:
+  project: {{ default $.Values.defaults.project $app.project }}
+  source:
+    repoURL: {{ $app.source.repoURL | quote }}
+    targetRevision: {{ $app.source.targetRevision | quote }}
+    {{- with $app.source.path }}
+    path: {{ . | quote }}
+    {{- end }}
+    {{- with $app.source.chart }}
+    chart: {{ . | quote }}
+    {{- end }}
+    {{- with $app.source.helm }}
+    helm:
+{{ toYaml . | indent 6 }}
+    {{- end }}
+  destination:
+    server: {{ default $.Values.defaults.destinationServer $app.destination.server | quote }}
+    namespace: {{ $app.destination.namespace | quote }}
+  {{- if hasKey $app "syncPolicy" }}
+  syncPolicy:
+{{ toYaml $app.syncPolicy | indent 4 }}
+  {{- else if $.Values.defaults.syncPolicy }}
+  syncPolicy:
+{{ toYaml $.Values.defaults.syncPolicy | indent 4 }}
+  {{- end }}
+  {{- with $app.ignoreDifferences }}
+  ignoreDifferences:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+  {{- with $app.info }}
+  info:
+{{ toYaml . | indent 4 }}
+  {{- end }}
+  {{- with $app.revisionHistoryLimit }}
+  revisionHistoryLimit: {{ . }}
+  {{- end }}
+{{- end }}

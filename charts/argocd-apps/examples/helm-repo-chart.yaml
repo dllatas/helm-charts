@@ -1,0 +1,12 @@
+applications:
+  - name: harbor
+    source:
+      repoURL: registry-1.docker.io/bitnamicharts
+      targetRevision: 24.3.4
+      chart: harbor
+      helm:
+        releaseName: harbor
+        values: |
+          externalURL: https://harbor.harokilabs.com
+    destination:
+      namespace: storage

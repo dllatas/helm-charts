@@ -1,0 +1,16 @@
+applications:
+  - name: app-a
+    source:
+      repoURL: https://github.com/org/repo.git
+      targetRevision: master
+      path: charts/app
+    destination:
+      namespace: app-a
+
+  - name: app-a
+    source:
+      repoURL: https://github.com/org/repo.git
+      targetRevision: master
+      path: charts/app2
+    destination:
+      namespace: app-b
