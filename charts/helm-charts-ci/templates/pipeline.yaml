@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "helm-charts-ci.commonLabels" . | nindent 4 }}
 spec:
-  description: Validate changed charts on PR/push and publish to Harbor on main pushes.
+  description: Validate changed charts on PR/push and publish to Harbor on master pushes.
   params:
     - name: repo-url
       type: string
@@ -38,6 +38,8 @@ spec:
           value: "$(params.repo-url)"
         - name: revision
           value: "$(params.revision)"
+        - name: depth
+          value: "0"
         - name: deleteExisting
           value: "true"
 
@@ -57,6 +59,8 @@ spec:
             env:
               - name: SKIP_E2E
                 value: {{ .Values.run.skipE2E | quote }}
+              - name: STRICT_CHANGED_CHARTS
+                value: "true"
             script: |
               #!/usr/bin/env bash
               set -euo pipefail
@@ -109,6 +113,8 @@ spec:
                   secretKeyRef:
                     name: {{ .Values.publish.secretName }}
                     key: {{ .Values.publish.secretKeys.harborPassword }}
+              - name: STRICT_CHANGED_CHARTS
+                value: "true"
             script: |
               #!/usr/bin/env bash
               set -euo pipefail

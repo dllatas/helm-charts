@@ -32,6 +32,7 @@ spec:
             - name: filter
               value: >
                 body.repository.full_name == '{{ .Values.github.repositoryFullName }}'
+                && (header.canonical('X-GitHub-Event') != 'push' || body.deleted == false)
                 {{- if .Values.github.extraFilter }}
                 && ({{ .Values.github.extraFilter }})
                 {{- end }}
@@ -40,10 +41,10 @@ spec:
                 - key: event_type
                   expression: "header.canonical('X-GitHub-Event')"
                 - key: revision
-                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.head.sha : body.head_commit.id"
+                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.head.sha : body.after"
                 - key: base_ref
-                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.base.sha : 'origin/{{ .Values.publish.targetBranch }}'"
+                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.base.sha : body.before"
                 - key: head_ref
-                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.head.sha : body.head_commit.id"
+                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.head.sha : body.after"
                 - key: branch_name
                   expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.base.ref : body.ref.split('/')[2]"

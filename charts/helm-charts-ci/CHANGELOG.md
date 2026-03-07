@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.6
+
+- Fixed push event overlays to use GitHub `before`/`after` SHAs for `base_ref`, `head_ref`, and `revision`.
+- Added `STRICT_CHANGED_CHARTS=true` in validate/publish tasks to prevent accidental all-chart publish fallback.
+- Set `git-clone` depth to `0` for reliable commit-range diffs.
+- Hardened `ci/scripts/changed-charts.sh` ref resolution with SHA and branch fetch logic.
+
 ## 0.1.5
 
 - Changed default publish branch to `master`.
