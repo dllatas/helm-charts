@@ -11,7 +11,13 @@ cd "$ROOT_DIR"
 REPO_PATH="${HARBOR_OCI_REPO#oci://}"
 REGISTRY_HOST="${REPO_PATH%%/*}"
 
-mapfile -t CHARTS < <(ci/scripts/changed-charts.sh)
+changed_tmp="$(mktemp)"
+if ! ci/scripts/changed-charts.sh >"$changed_tmp"; then
+  rm -f "$changed_tmp"
+  exit 1
+fi
+mapfile -t CHARTS <"$changed_tmp"
+rm -f "$changed_tmp"
 
 if [[ ${#CHARTS[@]} -eq 0 ]]; then
   echo "No changed charts to publish"

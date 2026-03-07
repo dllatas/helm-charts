@@ -4,7 +4,13 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
-mapfile -t CHARTS < <(ci/scripts/changed-charts.sh)
+changed_tmp="$(mktemp)"
+if ! ci/scripts/changed-charts.sh >"$changed_tmp"; then
+  rm -f "$changed_tmp"
+  exit 1
+fi
+mapfile -t CHARTS <"$changed_tmp"
+rm -f "$changed_tmp"
 
 if [[ ${#CHARTS[@]} -eq 0 ]]; then
   echo "No changed charts detected"

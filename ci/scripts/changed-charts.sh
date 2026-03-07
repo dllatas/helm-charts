@@ -3,6 +3,7 @@ set -euo pipefail
 
 BASE_REF="${BASE_REF:-origin/master}"
 HEAD_REF="${HEAD_REF:-HEAD}"
+BRANCH_NAME="${BRANCH_NAME:-master}"
 
 if [[ -n "${BASE_SHA:-}" ]]; then
   BASE_REF="$BASE_SHA"
@@ -24,8 +25,11 @@ resolve_ref() {
     branch="${ref#origin/}"
     git fetch --no-tags origin "refs/heads/${branch}:refs/remotes/origin/${branch}" >/dev/null 2>&1 || true
   elif [[ "$ref" =~ ^[0-9a-f]{7,40}$ ]]; then
+    git fetch --no-tags origin "refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}" >/dev/null 2>&1 || true
+    git fetch --no-tags origin "+refs/heads/*:refs/remotes/origin/*" >/dev/null 2>&1 || true
     git fetch --no-tags origin "$ref" >/dev/null 2>&1 || true
   else
+    git fetch --no-tags origin "refs/heads/${BRANCH_NAME}:refs/remotes/origin/${BRANCH_NAME}" >/dev/null 2>&1 || true
     git fetch --no-tags origin "$ref" >/dev/null 2>&1 || true
   fi
 
