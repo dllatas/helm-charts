@@ -38,6 +38,8 @@ spec:
           value: "$(params.repo-url)"
         - name: revision
           value: "$(params.revision)"
+        - name: refspec
+          value: "+refs/heads/*:refs/remotes/origin/*"
         - name: depth
           value: "0"
         - name: deleteExisting
@@ -52,6 +54,7 @@ spec:
         params:
           - name: base-ref
           - name: head-ref
+          - name: branch-name
         steps:
           - name: validate
             image: {{ .Values.pipeline.toolsImage | quote }}
@@ -66,6 +69,7 @@ spec:
               set -euo pipefail
               export BASE_REF="$(params.base-ref)"
               export HEAD_REF="$(params.head-ref)"
+              export BRANCH_NAME="$(params.branch-name)"
               ./ci/scripts/run-validation.sh
       workspaces:
         - name: source
@@ -75,6 +79,8 @@ spec:
           value: "$(params.base-ref)"
         - name: head-ref
           value: "$(params.head-ref)"
+        - name: branch-name
+          value: "$(params.branch-name)"
 
     {{- if .Values.publish.enabled }}
     - name: publish
@@ -93,6 +99,10 @@ spec:
         workspaces:
           - name: source
           - name: docker-credentials
+        params:
+          - name: base-ref
+          - name: head-ref
+          - name: branch-name
         steps:
           - name: publish
             image: {{ .Values.pipeline.toolsImage | quote }}
@@ -118,10 +128,20 @@ spec:
             script: |
               #!/usr/bin/env bash
               set -euo pipefail
+              export BASE_REF="$(params.base-ref)"
+              export HEAD_REF="$(params.head-ref)"
+              export BRANCH_NAME="$(params.branch-name)"
               ./ci/scripts/publish-charts.sh
       workspaces:
         - name: source
           workspace: source
         - name: docker-credentials
           workspace: docker-credentials
+      params:
+        - name: base-ref
+          value: "$(params.base-ref)"
+        - name: head-ref
+          value: "$(params.head-ref)"
+        - name: branch-name
+          value: "$(params.branch-name)"
     {{- end }}

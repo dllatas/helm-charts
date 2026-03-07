@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.7
+
+- Fixed changed-chart detection strict-mode behavior so ref resolution errors fail tasks instead of silently returning no changes.
+- Propagated webhook refs (`base-ref`, `head-ref`, `branch-name`) into publish task to keep validation/publish diff scope aligned.
+- Added clone `refspec` to fetch remote branches for reliable SHA-based diff resolution.
+- Hardened SHA resolution fallback in `ci/scripts/changed-charts.sh` by fetching branch hints and remote branch refs.
+
 ## 0.1.6
 
 - Fixed push event overlays to use GitHub `before`/`after` SHAs for `base_ref`, `head_ref`, and `revision`.
