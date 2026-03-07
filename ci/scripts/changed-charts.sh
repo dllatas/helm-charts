@@ -64,11 +64,11 @@ fi
 
 if ! resolve_ref "$BASE_REF"; then
   echo "Could not resolve BASE_REF=$BASE_REF" >&2
-  if resolve_ref "$HEAD_REF"; then
+  if emit_changed_charts_from_ref "$HEAD_REF"; then
     echo "Falling back to changed files in HEAD_REF=$HEAD_REF" >&2
-    emit_changed_charts_from_ref "$HEAD_REF"
     exit 0
   fi
+  echo "Could not resolve HEAD_REF=$HEAD_REF" >&2
   if [[ "${STRICT_CHANGED_CHARTS:-false}" == "true" ]]; then
     exit 1
   fi
