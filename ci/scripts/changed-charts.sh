@@ -13,6 +13,9 @@ if [[ -n "${HEAD_SHA:-}" ]]; then
   HEAD_REF="$HEAD_SHA"
 fi
 
+# Tekton workspace ownership can differ across tasks/steps; mark cwd as safe for git.
+git config --global --add safe.directory "${PWD}" >/dev/null 2>&1 || true
+
 is_null_sha() {
   local ref="$1"
   [[ "$ref" =~ ^0+$ ]]
