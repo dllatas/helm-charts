@@ -1,0 +1,11 @@
+pipeline:
+  mode: inlineDeploy
+
+eventListener:
+  mode: perTrigger
+
+triggers:
+  - name: bootstrap
+    repoFullName: dllatas/netcup-apps
+    pathFilters:
+      - "bootstrap/argocd-apps/"

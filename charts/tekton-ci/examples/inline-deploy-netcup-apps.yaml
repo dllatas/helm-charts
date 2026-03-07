@@ -1,0 +1,40 @@
+pipeline:
+  mode: inlineDeploy
+  name: netcup-apps-ci
+
+deploy:
+  image: quay.io/helmpack/chart-testing:v3.14.0
+  valuesGlob: bootstrap/argocd-apps/*.yaml
+  lockSuffix: .lock.yaml
+  chartRef: oci://harbor.harokilabs.com/helm-charts/argocd-apps
+  defaultNamespace: argocd
+  targetBranch: master
+  rbac:
+    create: true
+    namespace: argocd
+    serviceAccountName: ci-services
+    serviceAccountNamespace: ci
+
+eventListener:
+  mode: single
+  name: github-netcup-apps
+  eventTypes:
+    - push
+    - pull_request
+  includeChangedFiles: true
+
+triggers:
+  - name: bootstrap
+    repoFullName: dllatas/netcup-apps
+    pathFilters:
+      - "bootstrap/argocd-apps/"
+
+httpRoute:
+  enabled: true
+  name: tekton-github-netcup-apps
+  parentRefs:
+    - namespace: ingress
+      name: gateway
+  hostnames:
+    - build.harokilabs.com
+  pathPrefix: /apps/

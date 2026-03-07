@@ -14,10 +14,18 @@ spec:
     - name: git-repo-url
       value: "$(body.repository.ssh_url)"
     - name: git-revision
-      value: "$(body.head_commit.id)"
-    - name: git-revision-short
-      value: "$(extensions.short_sha)"
+      value: "$(extensions.git_revision)"
     - name: branch-name
       value: "$(extensions.branch_name)"
+    - name: event-type
+      value: "$(header.X-GitHub-Event)"
+    - name: before-sha
+      value: "$(extensions.before_sha)"
+    - name: after-sha
+      value: "$(extensions.after_sha)"
+    {{- if eq .Values.pipeline.mode "imageBuild" }}
+    - name: git-revision-short
+      value: "$(extensions.short_sha)"
+    {{- end }}
     {{- end }}
 {{- end }}

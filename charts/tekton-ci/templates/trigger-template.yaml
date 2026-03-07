@@ -10,11 +10,16 @@ spec:
   params:
     - name: git-repo-url
     - name: git-revision
-    - name: git-revision-short
     - name: branch-name
+    - name: event-type
+    - name: before-sha
+    - name: after-sha
+    {{- if eq .Values.pipeline.mode "imageBuild" }}
+    - name: git-revision-short
     - name: image-reference
     - name: image-dockerfile
     - name: image-context
+    {{- end }}
   resourcetemplates:
     - apiVersion: {{ .Values.apiVersions.tekton }}
       kind: PipelineRun
@@ -55,6 +60,15 @@ spec:
             value: "$(tt.params.git-repo-url)"
           - name: {{ .Values.pipeline.params.revision }}
             value: "$(tt.params.git-revision)"
+          - name: {{ .Values.pipeline.params.branchName }}
+            value: "$(tt.params.branch-name)"
+          - name: {{ .Values.pipeline.params.eventType }}
+            value: "$(tt.params.event-type)"
+          - name: {{ .Values.pipeline.params.beforeSha }}
+            value: "$(tt.params.before-sha)"
+          - name: {{ .Values.pipeline.params.afterSha }}
+            value: "$(tt.params.after-sha)"
+          {{- if eq .Values.pipeline.mode "imageBuild" }}
           - name: {{ .Values.pipeline.params.imageReference }}
             value: "$(tt.params.image-reference)"
           - name: {{ .Values.pipeline.params.imageTag }}
@@ -63,4 +77,5 @@ spec:
             value: "$(tt.params.image-dockerfile)"
           - name: {{ .Values.pipeline.params.imageContext }}
             value: "$(tt.params.image-context)"
+          {{- end }}
 {{- end }}
