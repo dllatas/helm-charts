@@ -28,6 +28,7 @@ Set API versions via values:
 
 - `eventListener.mode: single` (default)
   - one EventListener with many triggers
+  - easiest option for most repositories
 - `eventListener.mode: perTrigger`
   - one EventListener per trigger
 
