@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
+- Docs: clarified that `eventListener.mode=single` is the easiest default for most repositories.
+
 ## 0.3.0
 
 - Added `pipeline.mode=inlineDeploy` for webhook-driven deployment of Harbor `argocd-apps` charts from changed values files.
