@@ -6,6 +6,7 @@
     "apiVersions",
     "taskRefs",
     "pipeline",
+    "deploy",
     "run",
     "github",
     "eventListener",
@@ -77,6 +78,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "mode",
         "name",
         "serviceAccountName",
         "builderImage",
@@ -84,6 +86,13 @@
         "params"
       ],
       "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "imageBuild",
+            "inlineDeploy"
+          ]
+        },
         "name": {
           "type": "string",
           "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"
@@ -108,10 +117,10 @@
           "required": [
             "repoUrl",
             "revision",
-            "imageReference",
-            "imageTag",
-            "imageDockerfile",
-            "imageContext"
+            "branchName",
+            "eventType",
+            "beforeSha",
+            "afterSha"
           ],
           "properties": {
             "repoUrl": {
@@ -119,6 +128,22 @@
               "minLength": 1
             },
             "revision": {
+              "type": "string",
+              "minLength": 1
+            },
+            "branchName": {
+              "type": "string",
+              "minLength": 1
+            },
+            "eventType": {
+              "type": "string",
+              "minLength": 1
+            },
+            "beforeSha": {
+              "type": "string",
+              "minLength": 1
+            },
+            "afterSha": {
               "type": "string",
               "minLength": 1
             },
@@ -137,6 +162,69 @@
             "imageContext": {
               "type": "string",
               "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "deploy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "image",
+        "valuesGlob",
+        "lockSuffix",
+        "chartRef",
+        "defaultNamespace",
+        "targetBranch",
+        "rbac"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "minLength": 1
+        },
+        "valuesGlob": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lockSuffix": {
+          "type": "string",
+          "minLength": 1
+        },
+        "chartRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "defaultNamespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "targetBranch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rbac": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "create",
+            "namespace",
+            "serviceAccountName",
+            "serviceAccountNamespace"
+          ],
+          "properties": {
+            "create": {
+              "type": "boolean"
+            },
+            "namespace": {
+              "type": "string"
+            },
+            "serviceAccountName": {
+              "type": "string"
+            },
+            "serviceAccountNamespace": {
+              "type": "string"
             }
           }
         }
@@ -341,7 +429,6 @@
         "required": [
           "name",
           "repoFullName",
-          "image",
           "pathFilters"
         ],
         "properties": {
@@ -394,5 +481,99 @@
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "pipeline": {
+            "properties": {
+              "mode": {
+                "const": "imageBuild"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "pipeline": {
+            "properties": {
+              "params": {
+                "required": [
+                  "imageReference",
+                  "imageTag",
+                  "imageDockerfile",
+                  "imageContext"
+                ]
+              }
+            }
+          },
+          "triggers": {
+            "items": {
+              "required": [
+                "image"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pipeline": {
+            "properties": {
+              "mode": {
+                "const": "inlineDeploy"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "eventListener": {
+            "properties": {
+              "mode": {
+                "const": "single"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "deploy": {
+            "properties": {
+              "rbac": {
+                "properties": {
+                  "create": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "deploy": {
+            "properties": {
+              "rbac": {
+                "properties": {
+                  "namespace": {
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

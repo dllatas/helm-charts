@@ -11,6 +11,7 @@ taskRefs:
   build: buildah
 
 pipeline:
+  mode: imageBuild
   name: build
   serviceAccountName: ci-services
   builderImage: quay.io/buildah/stable:v1.39.2
@@ -18,10 +19,27 @@ pipeline:
   params:
     repoUrl: repo-url
     revision: revision
+    branchName: branch-name
+    eventType: event-type
+    beforeSha: before-sha
+    afterSha: after-sha
     imageReference: image-reference
     imageTag: image-tag
     imageDockerfile: image-dockerfile
     imageContext: image-context
+
+deploy:
+  image: quay.io/helmpack/chart-testing:v3.14.0
+  valuesGlob: bootstrap/argocd-apps/*.yaml
+  lockSuffix: .lock.yaml
+  chartRef: oci://harbor.harokilabs.com/helm-charts/argocd-apps
+  defaultNamespace: argocd
+  targetBranch: master
+  rbac:
+    create: false
+    namespace: argocd
+    serviceAccountName: ""
+    serviceAccountNamespace: ""
 
 run:
   pvcSize: 1Gi

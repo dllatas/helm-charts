@@ -1,6 +1,6 @@
 # tekton-ci chart
 
-Environment-agnostic Tekton CI bundle chart for webhook-driven image builds.
+Environment-agnostic Tekton CI bundle chart for webhook-driven pipelines.
 
 ## Resources rendered
 
@@ -12,7 +12,7 @@ Environment-agnostic Tekton CI bundle chart for webhook-driven image builds.
 
 ## Not included in this chart
 
-- Namespace, service account, RBAC
+- Namespace, service account
 - Secrets (`github-secret`, docker creds, ssh creds)
 - Tekton task resources (`git-clone`, `buildah`, custom tasks)
 
@@ -31,15 +31,44 @@ Set API versions via values:
 - `eventListener.mode: perTrigger`
   - one EventListener per trigger
 
+## Pipeline modes
+
+- `pipeline.mode: imageBuild` (default)
+  - clone + build/push flow using `taskRefs.clone` and `taskRefs.build`
+  - requires `triggers[].image.*`
+- `pipeline.mode: inlineDeploy`
+  - clone + inline taskSpec deploy flow for Harbor-hosted `argocd-apps` chart
+  - validates changed values files and installs on `push` to target branch
+  - `triggers[].image.*` not required
+
+## Inline Deploy Contract
+
+When `pipeline.mode=inlineDeploy`:
+
+- changed files are selected by `deploy.valuesGlob` (default `bootstrap/argocd-apps/*.yaml`)
+- lock files are required beside each values file using `deploy.lockSuffix` (default `.lock.yaml`)
+- each lock file must contain:
+  - `chartVersion`
+  - `releaseName`
+  - `namespace` (falls back to `deploy.defaultNamespace` if empty)
+- install executes only when:
+  - GitHub event is `push`
+  - branch equals `deploy.targetBranch` (default `master`)
+
+Optional RBAC rendering for deploy mode:
+
+- enable `deploy.rbac.create=true`
+- creates Role/RoleBinding in `deploy.rbac.namespace` for applying ArgoCD `Application` resources and Helm release secrets.
+
 ## Trigger model
 
 Each entry in `triggers[]` defines one webhook trigger:
 
 - `name`
 - `repoFullName`
-- `image.reference`, `image.dockerfile`, `image.context`
 - `pathFilters[]`
 - optional `extraCelFilters[]`
+- `image.reference`, `image.dockerfile`, `image.context` only for `pipeline.mode=imageBuild`
 
 ## HTTPRoute
 
@@ -54,5 +83,6 @@ Enable with `httpRoute.enabled: true`.
 - `examples/single-listener.yaml`
 - `examples/per-trigger.yaml`
 - `examples/api-v1.yaml`
+- `examples/inline-deploy-netcup-apps.yaml`
 - `examples/invalid-duplicate-trigger.yaml`
 - `examples/invalid-missing-path.yaml`

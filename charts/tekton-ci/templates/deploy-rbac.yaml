@@ -1,0 +1,52 @@
+{{- if and (eq .Values.pipeline.mode "inlineDeploy") .Values.deploy.rbac.create }}
+{{- $saName := .Values.deploy.rbac.serviceAccountName | default .Values.pipeline.serviceAccountName -}}
+{{- $saNamespace := .Values.deploy.rbac.serviceAccountNamespace | default .Release.Namespace -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "tekton-ci.fullname" . }}-argocd-app-deployer
+  namespace: {{ .Values.deploy.rbac.namespace }}
+  labels:
+    {{- include "tekton-ci.commonLabels" . | nindent 4 }}
+rules:
+  - apiGroups:
+      - argoproj.io
+    resources:
+      - applications
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "tekton-ci.fullname" . }}-argocd-app-deployer
+  namespace: {{ .Values.deploy.rbac.namespace }}
+  labels:
+    {{- include "tekton-ci.commonLabels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ $saName }}
+    namespace: {{ $saNamespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "tekton-ci.fullname" . }}-argocd-app-deployer
+{{- end }}

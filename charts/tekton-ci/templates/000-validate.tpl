@@ -3,6 +3,11 @@
 {{- fail (printf "eventListener.mode must be one of [single, perTrigger], got %q" $mode) -}}
 {{- end -}}
 
+{{- $pipelineMode := .Values.pipeline.mode -}}
+{{- if not (or (eq $pipelineMode "imageBuild") (eq $pipelineMode "inlineDeploy")) -}}
+{{- fail (printf "pipeline.mode must be one of [imageBuild, inlineDeploy], got %q" $pipelineMode) -}}
+{{- end -}}
+
 {{- $triggerNames := dict -}}
 {{- range $trigger := .Values.triggers -}}
 {{- if hasKey $triggerNames $trigger.name -}}
@@ -13,6 +18,7 @@
 {{- if not $trigger.repoFullName -}}
 {{- fail (printf "trigger %q requires repoFullName" $trigger.name) -}}
 {{- end -}}
+{{- if eq $pipelineMode "imageBuild" -}}
 {{- if not $trigger.image.reference -}}
 {{- fail (printf "trigger %q requires image.reference" $trigger.name) -}}
 {{- end -}}
@@ -22,9 +28,38 @@
 {{- if not $trigger.image.context -}}
 {{- fail (printf "trigger %q requires image.context" $trigger.name) -}}
 {{- end -}}
+{{- end -}}
 {{- if eq (len $trigger.pathFilters) 0 -}}
 {{- fail (printf "trigger %q requires at least one pathFilters entry" $trigger.name) -}}
 {{- end -}}
+{{- end -}}
+
+{{- if and (eq $pipelineMode "inlineDeploy") (ne $mode "single") -}}
+{{- fail "pipeline.mode=inlineDeploy requires eventListener.mode=single" -}}
+{{- end -}}
+
+{{- if and (eq $pipelineMode "inlineDeploy") (not .Values.deploy.image) -}}
+{{- fail "pipeline.mode=inlineDeploy requires deploy.image" -}}
+{{- end -}}
+
+{{- if and (eq $pipelineMode "inlineDeploy") (not .Values.deploy.valuesGlob) -}}
+{{- fail "pipeline.mode=inlineDeploy requires deploy.valuesGlob" -}}
+{{- end -}}
+
+{{- if and (eq $pipelineMode "inlineDeploy") (not .Values.deploy.chartRef) -}}
+{{- fail "pipeline.mode=inlineDeploy requires deploy.chartRef" -}}
+{{- end -}}
+
+{{- if and (eq $pipelineMode "inlineDeploy") (not .Values.deploy.lockSuffix) -}}
+{{- fail "pipeline.mode=inlineDeploy requires deploy.lockSuffix" -}}
+{{- end -}}
+
+{{- if and (eq $pipelineMode "inlineDeploy") (eq (trim .Values.deploy.targetBranch) "") -}}
+{{- fail "pipeline.mode=inlineDeploy requires deploy.targetBranch" -}}
+{{- end -}}
+
+{{- if and .Values.deploy.rbac.create (eq (trim .Values.deploy.rbac.namespace) "") -}}
+{{- fail "deploy.rbac.create=true requires deploy.rbac.namespace" -}}
 {{- end -}}
 
 {{- if and .Values.httpRoute.enabled (eq (len .Values.httpRoute.parentRefs) 0) -}}

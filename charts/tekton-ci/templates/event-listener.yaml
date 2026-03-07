@@ -4,12 +4,14 @@
 - name: {{ $trigger.name }}
   bindings:
     - ref: {{ include "tekton-ci.triggerBindingName" $root }}
+    {{- if eq $root.Values.pipeline.mode "imageBuild" }}
     - name: image-reference
       value: {{ $trigger.image.reference | quote }}
     - name: image-dockerfile
       value: {{ $trigger.image.dockerfile | quote }}
     - name: image-context
       value: {{ $trigger.image.context | quote }}
+    {{- end }}
   template:
     ref: {{ include "tekton-ci.triggerTemplateName" $root }}
   interceptors:
@@ -39,9 +41,17 @@
         - name: overlays
           value:
             - key: branch_name
-              expression: "body.ref.split('/')[2]"
+              expression: "has(body.pull_request) ? body.pull_request.head.ref : body.ref.split('/')[2]"
+            - key: git_revision
+              expression: "has(body.pull_request) ? body.pull_request.head.sha : body.after"
+            - key: before_sha
+              expression: "has(body.pull_request) ? body.pull_request.base.sha : body.before"
+            - key: after_sha
+              expression: "has(body.pull_request) ? body.pull_request.head.sha : body.after"
+            {{- if eq $root.Values.pipeline.mode "imageBuild" }}
             - key: short_sha
-              expression: "body.head_commit.id.truncate(7)"
+              expression: "(has(body.pull_request) ? body.pull_request.head.sha : body.after).truncate(7)"
+            {{- end }}
 {{- end -}}
 
 {{- if eq .Values.eventListener.mode "single" }}
