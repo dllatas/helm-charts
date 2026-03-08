@@ -37,4 +37,5 @@ helm upgrade --install argocd-apps ./charts/argocd-apps -n argocd
 - `examples/minimal.yaml`
 - `examples/helm-repo-chart.yaml`
 - `examples/no-default-sync-policy.yaml`
+- `examples/no-default-sync-policy.yaml` shows how to preserve apps that intentionally omit `spec.syncPolicy`
 - `examples/invalid-duplicate-name.yaml`
