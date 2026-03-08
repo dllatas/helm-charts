@@ -1,0 +1,11 @@
+defaults:
+  syncPolicy: null
+
+applications:
+  - name: grafana
+    source:
+      repoURL: https://grafana.github.io/helm-charts
+      targetRevision: 8.10.1
+      chart: grafana
+    destination:
+      namespace: observability
