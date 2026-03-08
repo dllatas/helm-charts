@@ -36,7 +36,7 @@ spec:
   {{- if hasKey $app "syncPolicy" }}
   syncPolicy:
 {{ toYaml $app.syncPolicy | indent 4 }}
-  {{- else if $.Values.defaults.syncPolicy }}
+  {{- else if and (hasKey $.Values.defaults "syncPolicy") $.Values.defaults.syncPolicy }}
   syncPolicy:
 {{ toYaml $.Values.defaults.syncPolicy | indent 4 }}
   {{- end }}

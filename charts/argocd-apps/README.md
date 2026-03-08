@@ -22,6 +22,9 @@ Render ArgoCD `Application` resources from Helm values.
   - `source.helm` block
   - `destination.server`
   - `syncPolicy`, `ignoreDifferences`, `info`, `revisionHistoryLimit`
+- `defaults.syncPolicy` is optional:
+  - leave it unset to use the chart default automated sync policy
+  - set it to `null` to omit `spec.syncPolicy` unless an app defines its own `syncPolicy`
 
 ## Install
 
@@ -33,4 +36,5 @@ helm upgrade --install argocd-apps ./charts/argocd-apps -n argocd
 
 - `examples/minimal.yaml`
 - `examples/helm-repo-chart.yaml`
+- `examples/no-default-sync-policy.yaml`
 - `examples/invalid-duplicate-name.yaml`
