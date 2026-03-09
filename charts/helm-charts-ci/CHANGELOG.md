@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.8
+
+- Changed the default shared Tekton workspace binding from `volumeClaimTemplate` to `emptyDir` so CI does not depend on dynamic PVC provisioning.
+- Added `run.workspaceType` with `emptyDir` and `volumeClaimTemplate` modes.
+- Kept PVC-backed workspaces available as an explicit opt-in with validation and example coverage.
+
 ## 0.1.7
 
 - Fixed changed-chart detection strict-mode behavior so ref resolution errors fail tasks instead of silently returning no changes.

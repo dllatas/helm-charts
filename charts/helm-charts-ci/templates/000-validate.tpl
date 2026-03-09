@@ -7,3 +7,11 @@
 {{- if and .Values.httpRoute.enabled (not .Values.httpRoute.pathPrefix) -}}
 {{- fail "httpRoute.enabled=true requires httpRoute.pathPrefix" -}}
 {{- end -}}
+{{- if eq .Values.run.workspaceType "volumeClaimTemplate" -}}
+{{- if not .Values.run.pvcSize -}}
+{{- fail "run.workspaceType=volumeClaimTemplate requires run.pvcSize" -}}
+{{- end -}}
+{{- if eq (len .Values.run.pvcAccessModes) 0 -}}
+{{- fail "run.workspaceType=volumeClaimTemplate requires run.pvcAccessModes with at least one entry" -}}
+{{- end -}}
+{{- end -}}
