@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.2
+
+- Added `global` schema support so the chart can be consumed cleanly as a dependency.
+
 ## 0.0.1
 
 - Initial public release of the `service-account` chart.
