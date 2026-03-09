@@ -1,0 +1,13 @@
+telemetries:
+  - name: mesh-config
+    namespace: istio-system
+    spec:
+      accessLogging:
+        - providers:
+            - name: envoy
+  - name: mesh-config
+    namespace: istio-system
+    spec:
+      tracing:
+        - providers:
+            - name: otel-tracing

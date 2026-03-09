@@ -1,0 +1,17 @@
+serviceMonitors:
+  - name: istio-controlplane
+    namespace: observability
+    spec:
+      selector:
+        matchLabels:
+          app: istio
+      endpoints:
+        - port: http-monitoring
+  - name: istio-controlplane
+    namespace: observability
+    spec:
+      selector:
+        matchLabels:
+          app: envoy
+      endpoints:
+        - port: http-envoy-prom
