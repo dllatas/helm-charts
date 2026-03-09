@@ -1,0 +1,7 @@
+services:
+  - name: loginv2
+    namespace: auth
+    spec: {}
+  - name: loginv2
+    namespace: auth
+    spec: {}

@@ -1,0 +1,20 @@
+deployments:
+  - name: loginv2
+    namespace: auth
+    labels: {}
+    annotations: {}
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: loginv2
+      template:
+        metadata:
+          labels:
+            app: loginv2
+        spec:
+          containers:
+            - name: frontend
+              image: harbor.harokilabs.com/staging/login:re-enter-password-c1ef082
+              ports:
+                - containerPort: 8080
