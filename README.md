@@ -52,6 +52,8 @@ v4.x.x+...
   - `charts/certificate`
   - `charts/object-store`
   - `charts/instrumentation`
+  - `charts/telemetry`
+  - `charts/service-monitor`
   - `charts/tekton-ci`
   - `charts/helm-charts-ci`
 

@@ -1,0 +1,11 @@
+telemetries:
+  - name: mesh-config
+    namespace: istio-system
+    spec:
+      accessLogging:
+        - providers:
+            - name: envoy
+      tracing:
+        - providers:
+            - name: otel-tracing
+          randomSamplingPercentage: 100
