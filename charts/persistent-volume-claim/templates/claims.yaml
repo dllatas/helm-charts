@@ -1,0 +1,37 @@
+{{- range $claim := .Values.claims }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $claim.name }}
+  namespace: {{ $claim.namespace }}
+  labels:
+    helm.sh/chart: {{ printf "%s-%s" $.Chart.Name $.Chart.Version | trunc 63 | trimSuffix "-" | quote }}
+    app.kubernetes.io/name: {{ $.Chart.Name | quote }}
+    app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+{{- with $claim.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- with $claim.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  accessModes:
+{{- range $mode := $claim.accessModes }}
+    - {{ $mode }}
+{{- end }}
+  resources:
+    requests:
+      storage: {{ $claim.size }}
+{{- with $claim.storageClassName }}
+  storageClassName: {{ . | quote }}
+{{- end }}
+{{- with $claim.volumeMode }}
+  volumeMode: {{ . }}
+{{- end }}
+{{- with $claim.volumeName }}
+  volumeName: {{ . | quote }}
+{{- end }}
+{{- end }}

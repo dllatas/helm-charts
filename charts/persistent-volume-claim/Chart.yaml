@@ -1,0 +1,6 @@
+apiVersion: v2
+name: persistent-volume-claim
+description: Minimal chart for creating one or more PersistentVolumeClaim resources
+type: application
+version: 0.0.1
+appVersion: "1.0.0"

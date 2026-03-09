@@ -1,0 +1,17 @@
+objectStores:
+  - name: minio
+    namespace: storage
+    spec:
+      configuration:
+        destinationPath: s3://staging-habito-pg-backup/
+        endpointURL: http://minio.storage.svc.cluster.local:9000
+        s3Credentials:
+          accessKeyId:
+            name: minio-creds
+            key: ACCESS_KEY_ID
+          secretAccessKey:
+            name: minio-creds
+            key: ACCESS_SECRET_KEY
+        wal:
+          compression: gzip
+          encryption: AES256

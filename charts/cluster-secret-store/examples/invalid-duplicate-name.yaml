@@ -1,0 +1,5 @@
+clusterSecretStores:
+  - name: vault-backend
+    spec: {}
+  - name: vault-backend
+    spec: {}

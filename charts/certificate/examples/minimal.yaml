@@ -1,0 +1,11 @@
+certificates:
+  - name: harokilabs-wildcard
+    namespace: cert-manager
+    spec:
+      secretName: harokilabs-wildcard-tls
+      dnsNames:
+        - harokilabs.com
+        - '*.harokilabs.com'
+      issuerRef:
+        kind: ClusterIssuer
+        name: letsencrypt-prod

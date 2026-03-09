@@ -1,0 +1,7 @@
+referenceGrants:
+  - name: grant
+    namespace: cert-manager
+    spec: {}
+  - name: grant
+    namespace: cert-manager
+    spec: {}

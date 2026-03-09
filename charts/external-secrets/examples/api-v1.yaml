@@ -1,0 +1,14 @@
+apiVersion: external-secrets.io/v1
+
+externalSecrets:
+  - name: api-v1-secret
+    namespace: ci
+    secretStoreRef:
+      kind: ClusterSecretStore
+      name: vault-backend
+    target:
+      name: api-v1-secret
+    data:
+      - secretKey: value
+        remoteRef:
+          key: kv/netcup/ci

@@ -1,0 +1,7 @@
+routes:
+  - name: vault-route
+    namespace: vault
+    spec: {}
+  - name: vault-route
+    namespace: vault
+    spec: {}

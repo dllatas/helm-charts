@@ -1,0 +1,15 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+
+referenceGrants:
+  - name: example-grant
+    namespace: default
+    labels: {}
+    annotations: {}
+    spec:
+      from:
+        - group: gateway.networking.k8s.io
+          kind: Gateway
+          namespace: ingress
+      to:
+        - group: ""
+          kind: Secret

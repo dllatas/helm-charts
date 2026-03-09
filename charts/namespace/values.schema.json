@@ -4,6 +4,7 @@
   "additionalProperties": false,
   "required": ["name"],
   "properties": {
+    "global": {"type": "object", "additionalProperties": true},
     "name": {
       "type": "string",
       "minLength": 1,

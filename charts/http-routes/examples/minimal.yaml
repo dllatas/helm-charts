@@ -1,0 +1,17 @@
+routes:
+  - name: vault-route
+    namespace: vault
+    spec:
+      parentRefs:
+        - namespace: ingress
+          name: gateway
+      hostnames:
+        - vault.harokilabs.com
+      rules:
+        - matches:
+            - path:
+                type: PathPrefix
+                value: /
+          backendRefs:
+            - name: vault
+              port: 8200

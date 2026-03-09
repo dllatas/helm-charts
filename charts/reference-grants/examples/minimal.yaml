@@ -1,0 +1,11 @@
+referenceGrants:
+  - name: allow-ingress-to-wildcard-certificate
+    namespace: cert-manager
+    spec:
+      from:
+        - group: gateway.networking.k8s.io
+          kind: Gateway
+          namespace: ingress
+      to:
+        - group: ""
+          kind: Secret

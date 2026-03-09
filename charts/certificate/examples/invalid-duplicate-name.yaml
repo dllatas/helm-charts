@@ -1,0 +1,7 @@
+certificates:
+  - name: wildcard
+    namespace: cert-manager
+    spec: {}
+  - name: wildcard
+    namespace: cert-manager
+    spec: {}
