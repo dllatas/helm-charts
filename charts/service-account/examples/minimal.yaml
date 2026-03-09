@@ -1,0 +1,10 @@
+serviceAccounts:
+  - name: ci-services
+    namespace: ci
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/ci-services
+    imagePullSecrets:
+      - name: registry-creds
+  - name: harbor-services
+    namespace: storage
+    automountServiceAccountToken: false

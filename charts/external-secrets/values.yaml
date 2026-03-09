@@ -1,0 +1,17 @@
+externalSecrets:
+  - name: example
+    namespace: default
+    refreshInterval: 1h
+    labels: {}
+    annotations: {}
+    secretStoreRef:
+      kind: ClusterSecretStore
+      name: vault-backend
+    target:
+      name: example
+      creationPolicy: Owner
+      deletionPolicy: Retain
+    data:
+      - secretKey: value
+        remoteRef:
+          key: kv/example

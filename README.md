@@ -41,6 +41,9 @@ v4.x.x+...
 - Charts currently included:
   - `charts/application`
   - `charts/argocd-apps`
+  - `charts/namespace`
+  - `charts/service-account`
+  - `charts/external-secrets`
   - `charts/tekton-ci`
   - `charts/helm-charts-ci`
 

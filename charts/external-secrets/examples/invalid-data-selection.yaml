@@ -1,0 +1,15 @@
+externalSecrets:
+  - name: broken-secret
+    namespace: ci
+    secretStoreRef:
+      kind: ClusterSecretStore
+      name: vault-backend
+    target:
+      name: broken-secret
+    data:
+      - secretKey: username
+        remoteRef:
+          key: kv/netcup/ci
+    dataFrom:
+      - extract:
+          key: kv/netcup/ci

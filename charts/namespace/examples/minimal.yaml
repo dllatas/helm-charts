@@ -1,0 +1,5 @@
+name: observability
+labels:
+  app.kubernetes.io/part-of: observability
+annotations:
+  bootstrap.harokilabs.com/owner: platform
