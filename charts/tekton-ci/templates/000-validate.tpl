@@ -57,6 +57,20 @@
 {{- if and (eq $pipelineMode "inlineDeploy") (eq (trim .Values.deploy.targetBranch) "") -}}
 {{- fail "pipeline.mode=inlineDeploy requires deploy.targetBranch" -}}
 {{- end -}}
+{{- if and (eq $pipelineMode "inlineDeploy") .Values.deploy.registryAuth.enabled -}}
+{{- if eq (trim .Values.deploy.registryAuth.registry) "" -}}
+{{- fail "deploy.registryAuth.enabled=true requires deploy.registryAuth.registry" -}}
+{{- end -}}
+{{- if eq (trim .Values.deploy.registryAuth.secretName) "" -}}
+{{- fail "deploy.registryAuth.enabled=true requires deploy.registryAuth.secretName" -}}
+{{- end -}}
+{{- if eq (trim .Values.deploy.registryAuth.usernameKey) "" -}}
+{{- fail "deploy.registryAuth.enabled=true requires deploy.registryAuth.usernameKey" -}}
+{{- end -}}
+{{- if eq (trim .Values.deploy.registryAuth.passwordKey) "" -}}
+{{- fail "deploy.registryAuth.enabled=true requires deploy.registryAuth.passwordKey" -}}
+{{- end -}}
+{{- end -}}
 
 {{- if and .Values.deploy.rbac.create (eq (trim .Values.deploy.rbac.namespace) "") -}}
 {{- fail "deploy.rbac.create=true requires deploy.rbac.namespace" -}}
