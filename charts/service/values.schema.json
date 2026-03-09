@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "services"],
+  "properties": {
+    "global": {"type": "object", "additionalProperties": true},
+    "apiVersion": {"type": "string", "enum": ["v1"]},
+    "services": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "namespace", "spec"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1, "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"},
+          "namespace": {"type": "string", "minLength": 1, "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"},
+          "labels": {"type": "object", "additionalProperties": {"type": "string"}},
+          "annotations": {"type": "object", "additionalProperties": {"type": "string"}},
+          "spec": {"type": "object", "additionalProperties": true}
+        }
+      }
+    }
+  }
+}

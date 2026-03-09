@@ -1,0 +1,14 @@
+services:
+  - name: loginv2
+    namespace: auth
+    labels: {}
+    annotations: {}
+    spec:
+      type: ClusterIP
+      selector:
+        app: loginv2
+      ports:
+        - name: http
+          port: 80
+          protocol: TCP
+          targetPort: 8080

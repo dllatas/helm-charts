@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+
+global: {}
+
+deployments:
+  - name: example-deployment
+    namespace: default
+    labels: {}
+    annotations: {}
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: example
+      template:
+        metadata:
+          labels:
+            app: example
+        spec:
+          containers:
+            - name: example
+              image: nginx:1.27.4
+              ports:
+                - containerPort: 80

@@ -1,0 +1,18 @@
+apiVersion: v1
+
+global: {}
+
+services:
+  - name: example-service
+    namespace: default
+    labels: {}
+    annotations: {}
+    spec:
+      type: ClusterIP
+      selector:
+        app: example
+      ports:
+        - name: http
+          port: 80
+          protocol: TCP
+          targetPort: 8080
