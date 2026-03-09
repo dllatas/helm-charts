@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.2
+
+- Added `git config --global --add safe.directory "$(pwd)"` to the inline deploy step so cloned workspaces render reliably under Tekton.
+- Removed the `resolve_changed_files || true` fallback so git discovery failures fail the deploy task instead of producing a false green no-op.
+
 ## 0.3.1
 
 - Docs: clarified that `eventListener.mode=single` is the easiest default for most repositories.

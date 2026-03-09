@@ -133,6 +133,8 @@ spec:
               #!/usr/bin/env bash
               set -euo pipefail
 
+              git config --global --add safe.directory "$(pwd)"
+
               strip_wrapping_quotes() {
                 local value="$1"
                 value="${value%\"}"
@@ -198,7 +200,7 @@ spec:
                 git show --pretty="" --name-only "$after"
               }
 
-              changed_files="$(resolve_changed_files || true)"
+              changed_files="$(resolve_changed_files)"
               values_files_tmp="$(mktemp)"
               selected_count=0
 
