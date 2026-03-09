@@ -33,8 +33,12 @@ helm upgrade --install helm-charts-ci ./charts/helm-charts-ci -n ci
 
 Default `pipeline.toolsImage` is `quay.io/helmpack/chart-testing:v3.14.0`.
 Default `run.skipE2E` is `true` for in-cluster Tekton runs.
-Default `run.workspaceType` is `emptyDir` to avoid storage-class dependency for ephemeral CI workspaces.
-Set `run.workspaceType=volumeClaimTemplate` only when you explicitly need PVC-backed workspaces, and then also set `run.pvcSize` and `run.pvcAccessModes`.
+Default `run.workspaceType` is `volumeClaimTemplate`.
+This chart uses separate Tekton Tasks for clone, validate, and publish, so the checked-out repository must live on a shared PVC-backed workspace.
+`emptyDir` is not supported for this chart.
+
+If terminal `PipelineRun` and `TaskRun` objects are retained for a long time, their workspace PVCs accumulate as well.
+Plan to prune completed Tekton runs in-cluster; [Tekton Pruner](https://github.com/tektoncd/pruner) is the right follow-up.
 
 ## Deploy Flow
 
@@ -102,4 +106,5 @@ Once a `push` to `master` runs, inspect the pipeline logs for `dist/publish-summ
 - `examples/no-route.yaml`
 - `examples/api-v1.yaml`
 - `examples/pvc-workspace.yaml`
+- `examples/invalid-emptydir-workspace.yaml`
 - `examples/invalid-missing-repo.yaml`

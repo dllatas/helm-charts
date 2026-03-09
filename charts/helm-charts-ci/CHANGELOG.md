@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.9
+
+- Restored `volumeClaimTemplate` as the default and only supported shared workspace mode for `helm-charts-ci`.
+- Added validation and regression coverage so `emptyDir` cannot be configured for this multi-task pipeline.
+- Documented the operational need to prune completed Tekton runs, with Tekton Pruner as the intended follow-up.
+
 ## 0.1.8
 
 - Changed the default shared Tekton workspace binding from `volumeClaimTemplate` to `emptyDir` so CI does not depend on dynamic PVC provisioning.
