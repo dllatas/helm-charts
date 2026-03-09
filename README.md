@@ -56,6 +56,8 @@ v4.x.x+...
   - `charts/service-monitor`
   - `charts/deployment`
   - `charts/service`
+  - `charts/cnpg-cluster`
+  - `charts/cnpg-scheduled-backup`
   - `charts/tekton-ci`
   - `charts/helm-charts-ci`
 

@@ -1,0 +1,7 @@
+cnpgClusters:
+  - name: kratos-dbv2
+    namespace: auth
+    spec: {}
+  - name: kratos-dbv2
+    namespace: auth
+    spec: {}

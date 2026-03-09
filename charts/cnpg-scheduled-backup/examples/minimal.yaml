@@ -1,0 +1,11 @@
+cnpgScheduledBackups:
+  - name: kratosv2
+    namespace: auth
+    labels: {}
+    annotations: {}
+    spec:
+      schedule: "0 0 0 * * *"
+      method: barmanObjectStore
+      backupOwnerReference: self
+      cluster:
+        name: kratos-dbv2

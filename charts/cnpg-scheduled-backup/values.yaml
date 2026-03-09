@@ -1,0 +1,15 @@
+apiVersion: postgresql.cnpg.io/v1
+
+global: {}
+
+cnpgScheduledBackups:
+  - name: example-backup
+    namespace: default
+    labels: {}
+    annotations: {}
+    spec:
+      schedule: "0 0 0 * * *"
+      method: barmanObjectStore
+      backupOwnerReference: self
+      cluster:
+        name: example-cluster
