@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.3
+
+- Republished the `external-secrets` chart after the original master publish was blocked by a CI validation failure in unrelated charts.
+
 ## 0.0.2
 
 - Added dual API support for `external-secrets.io/v1beta1` and `external-secrets.io/v1`.
