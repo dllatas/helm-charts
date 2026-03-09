@@ -54,6 +54,7 @@ spec:
         params:
           - name: base-ref
           - name: head-ref
+          - name: event-type
           - name: branch-name
         steps:
           - name: validate
@@ -69,7 +70,15 @@ spec:
               set -euo pipefail
               export BASE_REF="$(params.base-ref)"
               export HEAD_REF="$(params.head-ref)"
+              export EVENT_TYPE="$(params.event-type)"
               export BRANCH_NAME="$(params.branch-name)"
+              export TARGET_BRANCH={{ .Values.publish.targetBranch | quote }}
+              if [[ "$EVENT_TYPE" == "push" && "$BRANCH_NAME" == "$TARGET_BRANCH" ]]; then
+                export DIFF_MODE="push-range"
+              else
+                export BASE_REF="origin/$TARGET_BRANCH"
+                export DIFF_MODE="merge-base"
+              fi
               ./ci/scripts/run-validation.sh
       workspaces:
         - name: source
@@ -79,6 +88,8 @@ spec:
           value: "$(params.base-ref)"
         - name: head-ref
           value: "$(params.head-ref)"
+        - name: event-type
+          value: "$(params.event-type)"
         - name: branch-name
           value: "$(params.branch-name)"
 
@@ -131,6 +142,7 @@ spec:
               export BASE_REF="$(params.base-ref)"
               export HEAD_REF="$(params.head-ref)"
               export BRANCH_NAME="$(params.branch-name)"
+              export DIFF_MODE="push-range"
               ./ci/scripts/publish-charts.sh
       workspaces:
         - name: source

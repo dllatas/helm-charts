@@ -12,6 +12,9 @@ helm template helm-charts-ci-pvc "$CHART_DIR" -f "$CHART_DIR/examples/pvc-worksp
 
 grep -q 'volumeClaimTemplate:' /tmp/helm-charts-ci-default.yaml
 grep -q 'volumeClaimTemplate:' /tmp/helm-charts-ci-pvc.yaml
+grep -q 'export TARGET_BRANCH="master"' /tmp/helm-charts-ci-default.yaml
+grep -q 'export DIFF_MODE="merge-base"' /tmp/helm-charts-ci-default.yaml
+grep -q 'export DIFF_MODE="push-range"' /tmp/helm-charts-ci-default.yaml
 
 if helm template helm-charts-ci-invalid "$CHART_DIR" -f "$CHART_DIR/examples/invalid-missing-repo.yaml" >/tmp/helm-charts-ci-invalid.yaml 2>/tmp/helm-charts-ci-invalid.err; then
   echo "Expected invalid-missing-repo.yaml to fail"

@@ -4,6 +4,7 @@ set -euo pipefail
 BASE_REF="${BASE_REF:-origin/master}"
 HEAD_REF="${HEAD_REF:-HEAD}"
 BRANCH_NAME="${BRANCH_NAME:-master}"
+DIFF_MODE="${DIFF_MODE:-merge-base}"
 
 if [[ -n "${BASE_SHA:-}" ]]; then
   BASE_REF="$BASE_SHA"
@@ -19,6 +20,27 @@ git config --global --add safe.directory "${PWD}" >/dev/null 2>&1 || true
 is_null_sha() {
   local ref="$1"
   [[ "$ref" =~ ^0+$ ]]
+}
+
+emit_changed_charts_from_diff() {
+  local range=""
+
+  case "$DIFF_MODE" in
+    merge-base)
+      range="$BASE_REF...$HEAD_REF"
+      ;;
+    push-range)
+      range="$BASE_REF..$HEAD_REF"
+      ;;
+    *)
+      echo "Unsupported DIFF_MODE=$DIFF_MODE" >&2
+      exit 1
+      ;;
+  esac
+
+  git diff --name-only "$range" \
+    | awk -F/ '$1 == "charts" && $2 != "" {print $2}' \
+    | sort -u
 }
 
 resolve_ref() {
@@ -88,6 +110,4 @@ if ! resolve_ref "$HEAD_REF"; then
   exit 0
 fi
 
-git diff --name-only "$BASE_REF...$HEAD_REF" \
-  | awk -F/ '$1 == "charts" && $2 != "" {print $2}' \
-  | sort -u
+emit_changed_charts_from_diff
