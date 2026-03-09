@@ -204,6 +204,34 @@
           "type": "string",
           "minLength": 1
         },
+        "registryAuth": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "enabled",
+            "registry",
+            "secretName",
+            "usernameKey",
+            "passwordKey"
+          ],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "registry": {
+              "type": "string"
+            },
+            "secretName": {
+              "type": "string"
+            },
+            "usernameKey": {
+              "type": "string"
+            },
+            "passwordKey": {
+              "type": "string"
+            }
+          }
+        },
         "rbac": {
           "type": "object",
           "additionalProperties": false,

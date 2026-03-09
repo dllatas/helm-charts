@@ -55,11 +55,25 @@ When `pipeline.mode=inlineDeploy`:
 - install executes only when:
   - GitHub event is `push`
   - branch equals `deploy.targetBranch` (default `master`)
+- set `deploy.registryAuth.enabled=true` when `deploy.chartRef` points to a private OCI registry
 
 Optional RBAC rendering for deploy mode:
 
 - enable `deploy.rbac.create=true`
 - creates Role/RoleBinding in `deploy.rbac.namespace` for applying ArgoCD `Application` resources and Helm release secrets.
+
+Registry auth for private OCI charts:
+
+```yaml
+deploy:
+  chartRef: oci://harbor.harokilabs.com/helm-charts/argocd-apps
+  registryAuth:
+    enabled: true
+    registry: harbor.harokilabs.com
+    secretName: harbor-oci-reader
+    usernameKey: username
+    passwordKey: password
+```
 
 ## Trigger model
 

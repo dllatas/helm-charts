@@ -35,6 +35,12 @@ deploy:
   chartRef: oci://harbor.harokilabs.com/helm-charts/argocd-apps
   defaultNamespace: argocd
   targetBranch: master
+  registryAuth:
+    enabled: false
+    registry: ""
+    secretName: ""
+    usernameKey: username
+    passwordKey: password
   rbac:
     create: false
     namespace: argocd

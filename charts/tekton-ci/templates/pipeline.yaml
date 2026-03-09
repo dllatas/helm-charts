@@ -129,6 +129,22 @@ spec:
                 value: {{ .Values.deploy.defaultNamespace | quote }}
               - name: DEPLOY_TARGET_BRANCH
                 value: {{ .Values.deploy.targetBranch | quote }}
+              - name: DEPLOY_REGISTRY_AUTH_ENABLED
+                value: {{ ternary "true" "false" .Values.deploy.registryAuth.enabled | quote }}
+              - name: DEPLOY_REGISTRY
+                value: {{ .Values.deploy.registryAuth.registry | quote }}
+              {{- if .Values.deploy.registryAuth.enabled }}
+              - name: DEPLOY_REGISTRY_USERNAME
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.deploy.registryAuth.secretName | quote }}
+                    key: {{ .Values.deploy.registryAuth.usernameKey | quote }}
+              - name: DEPLOY_REGISTRY_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Values.deploy.registryAuth.secretName | quote }}
+                    key: {{ .Values.deploy.registryAuth.passwordKey | quote }}
+              {{- end }}
             script: |
               #!/usr/bin/env bash
               set -euo pipefail
@@ -199,6 +215,12 @@ spec:
 
                 git show --pretty="" --name-only "$after"
               }
+
+              if [ "${DEPLOY_REGISTRY_AUTH_ENABLED}" = "true" ]; then
+                printf '%s' "${DEPLOY_REGISTRY_PASSWORD}" | helm registry login "${DEPLOY_REGISTRY}" \
+                  --username "${DEPLOY_REGISTRY_USERNAME}" \
+                  --password-stdin >/dev/null
+              fi
 
               changed_files="$(resolve_changed_files)"
               values_files_tmp="$(mktemp)"

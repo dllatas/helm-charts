@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.3
+
+- Added optional `deploy.registryAuth` so `inlineDeploy` can log in to a private OCI registry before pulling Helm charts.
+- Added render coverage and docs for Harbor OCI auth in `inlineDeploy`.
+
 ## 0.3.2
 
 - Added `git config --global --add safe.directory "$(pwd)"` to the inline deploy step so cloned workspaces render reliably under Tekton.
