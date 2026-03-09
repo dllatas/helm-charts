@@ -12,10 +12,11 @@ Bootstrap chart for this repository CI/CD flow on Tekton.
 
 ## Behavior
 
-- Validates changed charts on `push` and `pull_request` events.
+- Validates changed charts on `push` and `pull_request` events against the target branch baseline.
 - Publishes changed charts to Harbor OCI only when:
   - event type is `push`
   - target branch matches `publish.targetBranch` (default `master`)
+- Uses the exact push SHA range for target-branch publish so branch rebases do not affect what gets published.
 
 ## Prerequisites
 

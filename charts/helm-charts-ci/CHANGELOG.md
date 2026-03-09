@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.11
+
+- Split validation and publish diff baselines so rebased branch pushes validate against the target branch while target-branch publishes use the exact push range.
+- Added regression coverage for the rendered baseline-selection logic in the Tekton pipeline.
+
 ## 0.1.10
 
 - Restored `volumeClaimTemplate` as the default and only supported shared workspace mode for `helm-charts-ci`.
