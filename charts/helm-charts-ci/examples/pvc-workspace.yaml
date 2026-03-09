@@ -1,0 +1,8 @@
+github:
+  repositoryFullName: dllatas/helm-charts
+
+run:
+  workspaceType: volumeClaimTemplate
+  pvcSize: 2Gi
+  pvcAccessModes:
+    - ReadWriteOnce

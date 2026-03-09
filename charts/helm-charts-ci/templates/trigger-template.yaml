@@ -28,6 +28,7 @@ spec:
             fsGroup: {{ .Values.run.fsGroup }}
         workspaces:
           - name: source
+            {{- if eq .Values.run.workspaceType "volumeClaimTemplate" }}
             volumeClaimTemplate:
               spec:
                 accessModes:
@@ -37,6 +38,9 @@ spec:
                 resources:
                   requests:
                     storage: {{ .Values.run.pvcSize }}
+            {{- else }}
+            emptyDir: {}
+            {{- end }}
           - name: ssh-creds
             secret:
               secretName: {{ .Values.run.sshSecretName }}
