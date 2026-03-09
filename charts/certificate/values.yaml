@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+
+certificates:
+  - name: example-certificate
+    namespace: default
+    labels: {}
+    annotations: {}
+    spec:
+      secretName: example-certificate-tls
+      dnsNames:
+        - example.harokilabs.com
+      issuerRef:
+        kind: ClusterIssuer
+        name: example-issuer

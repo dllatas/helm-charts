@@ -5,10 +5,13 @@ Minimal Helm v4 chart for creating External Secrets Operator `ExternalSecret` re
 ## Scope
 
 - Creates `ExternalSecret` resources only.
-- Uses `external-secrets.io/v1`.
 - Does not create `SecretStore`, `ClusterSecretStore`, or the ESO controller.
 
 ## Values contract
+
+Top-level:
+
+- `apiVersion`: `external-secrets.io/v1beta1` or `external-secrets.io/v1`
 
 Required per external secret:
 
@@ -37,5 +40,6 @@ Template-time `fail` checks reject:
 
 - `examples/data.yaml`
 - `examples/data-from.yaml`
+- `examples/api-v1.yaml`
 - `examples/invalid-duplicate-name.yaml`
 - `examples/invalid-data-selection.yaml`

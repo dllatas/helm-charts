@@ -1,0 +1,12 @@
+instrumentations:
+  - name: go-instrumentation
+    namespace: opentelemetry-system
+    spec:
+      exporter:
+        endpoint: http://otel-collector-deployment-opentelemetry-collector.opentelemetry-system.svc.cluster.local:4318
+      propagators:
+        - tracecontext
+        - baggage
+      sampler:
+        type: parentbased_traceidratio
+        argument: "1"

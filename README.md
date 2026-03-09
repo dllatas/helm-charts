@@ -44,6 +44,14 @@ v4.x.x+...
   - `charts/namespace`
   - `charts/service-account`
   - `charts/external-secrets`
+  - `charts/persistent-volume-claim`
+  - `charts/http-routes`
+  - `charts/reference-grants`
+  - `charts/cluster-secret-store`
+  - `charts/cluster-issuer`
+  - `charts/certificate`
+  - `charts/object-store`
+  - `charts/instrumentation`
   - `charts/tekton-ci`
   - `charts/helm-charts-ci`
 

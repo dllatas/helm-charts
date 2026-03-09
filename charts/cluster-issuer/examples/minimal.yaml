@@ -1,0 +1,14 @@
+clusterIssuers:
+  - name: letsencrypt-prod
+    spec:
+      acme:
+        email: daniel@harokikad.org
+        server: https://acme-v02.api.letsencrypt.org/directory
+        privateKeySecretRef:
+          name: letsencrypt-prod
+        solvers:
+          - dns01:
+              cloudflare:
+                apiTokenSecretRef:
+                  name: cloudflare-token
+                  key: cloudflare_api_token

@@ -1,0 +1,6 @@
+claims:
+  - name: example
+    namespace: default
+    size: 1Gi
+    accessModes:
+      - ReadWriteOnce

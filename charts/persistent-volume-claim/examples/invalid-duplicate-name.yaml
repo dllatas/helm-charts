@@ -1,0 +1,11 @@
+claims:
+  - name: data
+    namespace: vault
+    size: 1Gi
+    accessModes:
+      - ReadWriteOnce
+  - name: data
+    namespace: vault
+    size: 1Gi
+    accessModes:
+      - ReadWriteOnce

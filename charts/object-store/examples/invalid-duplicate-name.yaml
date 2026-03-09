@@ -1,0 +1,7 @@
+objectStores:
+  - name: minio
+    namespace: storage
+    spec: {}
+  - name: minio
+    namespace: storage
+    spec: {}

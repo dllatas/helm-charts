@@ -1,0 +1,7 @@
+instrumentations:
+  - name: go-instrumentation
+    namespace: opentelemetry-system
+    spec: {}
+  - name: go-instrumentation
+    namespace: opentelemetry-system
+    spec: {}

@@ -1,0 +1,21 @@
+apiVersion: gateway.networking.k8s.io/v1
+
+routes:
+  - name: example-route
+    namespace: default
+    labels: {}
+    annotations: {}
+    spec:
+      parentRefs:
+        - namespace: ingress
+          name: gateway
+      hostnames:
+        - example.harokilabs.com
+      rules:
+        - matches:
+            - path:
+                type: PathPrefix
+                value: /
+          backendRefs:
+            - name: example-service
+              port: 80
