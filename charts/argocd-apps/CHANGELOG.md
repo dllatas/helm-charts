@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.4
+
+- Replaced `rg` with `grep` in chart render tests so CI does not depend on ripgrep being present in the tools image.
+
 ## 0.0.3
 
 - Clarified the `no-default-sync-policy` example in the README.
