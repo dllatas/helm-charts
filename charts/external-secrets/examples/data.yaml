@@ -1,0 +1,17 @@
+externalSecrets:
+  - name: docker-credentials
+    namespace: ci
+    secretStoreRef:
+      kind: ClusterSecretStore
+      name: vault-backend
+    target:
+      name: docker-credentials
+      creationPolicy: Owner
+      deletionPolicy: Retain
+      template:
+        type: kubernetes.io/dockerconfigjson
+    data:
+      - secretKey: .dockerconfigjson
+        remoteRef:
+          key: kv/netcup/ci
+          property: dockerconfigjson

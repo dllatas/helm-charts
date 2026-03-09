@@ -1,0 +1,11 @@
+# Common VCS/OS/editor files
+.git/
+.gitignore
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.tmp
+
+# Packaged charts
+charts/*.tgz

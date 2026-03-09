@@ -1,0 +1,22 @@
+externalSecrets:
+  - name: registry-creds
+    namespace: ci
+    secretStoreRef:
+      kind: ClusterSecretStore
+      name: vault-backend
+    target:
+      name: registry-creds
+    data:
+      - secretKey: username
+        remoteRef:
+          key: kv/netcup/ci
+  - name: registry-creds
+    namespace: ci
+    secretStoreRef:
+      kind: ClusterSecretStore
+      name: vault-backend
+    target:
+      name: registry-creds
+    dataFrom:
+      - extract:
+          key: kv/netcup/ci

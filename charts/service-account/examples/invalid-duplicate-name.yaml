@@ -1,0 +1,5 @@
+serviceAccounts:
+  - name: ci-services
+    namespace: ci
+  - name: ci-services
+    namespace: ci

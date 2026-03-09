@@ -1,0 +1,7 @@
+serviceAccounts:
+  - name: example
+    namespace: default
+    labels: {}
+    annotations: {}
+    automountServiceAccountToken: true
+    imagePullSecrets: []
