@@ -1,0 +1,7 @@
+cnpgScheduledBackups:
+  - name: kratosv2
+    namespace: auth
+    spec: {}
+  - name: kratosv2
+    namespace: auth
+    spec: {}
