@@ -22,7 +22,7 @@ publish:
     harborPassword: harbor_password
 
 run:
-  workspaceType: emptyDir
+  workspaceType: volumeClaimTemplate
   pvcSize: 2Gi
   pvcAccessModes:
     - ReadWriteOnce

@@ -10,11 +10,16 @@ helm template helm-charts-ci-no-route "$CHART_DIR" -f "$CHART_DIR/examples/no-ro
 helm template helm-charts-ci-v1 "$CHART_DIR" -f "$CHART_DIR/examples/api-v1.yaml" >/tmp/helm-charts-ci-v1.yaml
 helm template helm-charts-ci-pvc "$CHART_DIR" -f "$CHART_DIR/examples/pvc-workspace.yaml" >/tmp/helm-charts-ci-pvc.yaml
 
-grep -q 'emptyDir: {}' /tmp/helm-charts-ci-default.yaml
+grep -q 'volumeClaimTemplate:' /tmp/helm-charts-ci-default.yaml
 grep -q 'volumeClaimTemplate:' /tmp/helm-charts-ci-pvc.yaml
 
 if helm template helm-charts-ci-invalid "$CHART_DIR" -f "$CHART_DIR/examples/invalid-missing-repo.yaml" >/tmp/helm-charts-ci-invalid.yaml 2>/tmp/helm-charts-ci-invalid.err; then
   echo "Expected invalid-missing-repo.yaml to fail"
+  exit 1
+fi
+
+if helm template helm-charts-ci-invalid-emptydir "$CHART_DIR" -f "$CHART_DIR/examples/invalid-emptydir-workspace.yaml" >/tmp/helm-charts-ci-invalid-emptydir.yaml 2>/tmp/helm-charts-ci-invalid-emptydir.err; then
+  echo "Expected invalid-emptydir-workspace.yaml to fail"
   exit 1
 fi
 

@@ -1,0 +1,5 @@
+github:
+  repositoryFullName: dllatas/helm-charts
+
+run:
+  workspaceType: emptyDir

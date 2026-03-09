@@ -62,7 +62,7 @@
       "additionalProperties": false,
       "required": ["workspaceType", "fsGroup", "skipE2E", "sshSecretName", "dockerSecretName"],
       "properties": {
-        "workspaceType": {"type": "string", "enum": ["emptyDir", "volumeClaimTemplate"]},
+        "workspaceType": {"type": "string", "enum": ["volumeClaimTemplate"]},
         "pvcSize": {"type": "string", "minLength": 1},
         "pvcAccessModes": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
         "fsGroup": {"type": "integer", "minimum": 1},
