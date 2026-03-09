@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.9
+## 0.1.10
 
 - Restored `volumeClaimTemplate` as the default and only supported shared workspace mode for `helm-charts-ci`.
 - Added validation and regression coverage so `emptyDir` cannot be configured for this multi-task pipeline.
