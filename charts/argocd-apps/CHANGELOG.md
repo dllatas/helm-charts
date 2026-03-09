@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.3
+
+- Clarified the `no-default-sync-policy` example in the README.
+
 ## 0.0.2
 
 - Allow `defaults.syncPolicy: null` to disable the chart-level default sync policy.
