@@ -9,12 +9,12 @@ helm lint --strict "$CHART_DIR"
 helm template argocd-apps-default "$CHART_DIR" -f "$CHART_DIR/examples/minimal.yaml" >/tmp/argocd-apps-default.yaml
 helm template argocd-apps-no-sync "$CHART_DIR" -f "$CHART_DIR/examples/no-default-sync-policy.yaml" >/tmp/argocd-apps-no-sync.yaml
 
-if ! rg -q '^  syncPolicy:$' /tmp/argocd-apps-default.yaml; then
+if ! grep -q '^  syncPolicy:$' /tmp/argocd-apps-default.yaml; then
   echo "Expected minimal example to render the default syncPolicy"
   exit 1
 fi
 
-if rg -q '^  syncPolicy:$' /tmp/argocd-apps-no-sync.yaml; then
+if grep -q '^  syncPolicy:$' /tmp/argocd-apps-no-sync.yaml; then
   echo "Expected no-default-sync-policy example to omit spec.syncPolicy"
   exit 1
 fi
