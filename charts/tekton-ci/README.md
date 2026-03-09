@@ -84,6 +84,7 @@ Each entry in `triggers[]` defines one webhook trigger:
 - `pathFilters[]`
 - optional `extraCelFilters[]`
 - `image.reference`, `image.dockerfile`, `image.context` only for `pipeline.mode=imageBuild`
+- image tags are derived from a sanitized branch slug; the full branch name is still passed through the pipeline metadata
 
 ## HTTPRoute
 

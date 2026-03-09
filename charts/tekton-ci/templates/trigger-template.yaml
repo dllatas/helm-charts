@@ -11,6 +11,7 @@ spec:
     - name: git-repo-url
     - name: git-revision
     - name: branch-name
+    - name: branch-slug
     - name: event-type
     - name: before-sha
     - name: after-sha
@@ -72,7 +73,7 @@ spec:
           - name: {{ .Values.pipeline.params.imageReference }}
             value: "$(tt.params.image-reference)"
           - name: {{ .Values.pipeline.params.imageTag }}
-            value: "$(tt.params.branch-name)-$(tt.params.git-revision-short)"
+            value: "$(tt.params.branch-slug)-$(tt.params.git-revision-short)"
           - name: {{ .Values.pipeline.params.imageDockerfile }}
             value: "$(tt.params.image-dockerfile)"
           - name: {{ .Values.pipeline.params.imageContext }}

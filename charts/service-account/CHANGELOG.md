@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.3
+
+- Added optional `secrets[]` support so service accounts can reference named secrets directly.
+
 ## 0.0.2
 
 - Added `global` schema support so the chart can be consumed cleanly as a dependency.

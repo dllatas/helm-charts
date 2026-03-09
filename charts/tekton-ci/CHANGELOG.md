@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.4
+
+- Fixed GitHub branch extraction to preserve full slash-named branch names instead of truncating at the first slash.
+- Sanitized image tags by deriving them from a branch slug while keeping the full branch name available as metadata.
+
 ## 0.3.3
 
 - Added optional `deploy.registryAuth` so `inlineDeploy` can log in to a private OCI registry before pulling Helm charts.

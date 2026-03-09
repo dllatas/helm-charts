@@ -11,6 +11,13 @@ helm template tekton-ci-per "$CHART_DIR" -f "$CHART_DIR/examples/per-trigger.yam
 helm template tekton-ci-v1 "$CHART_DIR" -f "$CHART_DIR/examples/api-v1.yaml" >/tmp/tekton-ci-v1.yaml
 helm template tekton-ci-inline "$CHART_DIR" -f "$CHART_DIR/examples/inline-deploy-netcup-apps.yaml" >/tmp/tekton-ci-inline.yaml
 
+grep -q "branch_slug" /tmp/tekton-ci-single.yaml
+if grep -q "split('/')\[2\]" /tmp/tekton-ci-single.yaml; then
+  echo "Expected branch extraction to preserve slash-named branches"
+  exit 1
+fi
+grep -q '\$(tt.params.branch-slug)-\$(tt.params.git-revision-short)' /tmp/tekton-ci-single.yaml
+
 grep -q 'git config --global --add safe.directory "$(pwd)"' /tmp/tekton-ci-inline.yaml
 grep -q 'helm registry login "${DEPLOY_REGISTRY}"' /tmp/tekton-ci-inline.yaml
 if grep -q 'resolve_changed_files || true' /tmp/tekton-ci-inline.yaml; then

@@ -2,5 +2,5 @@ apiVersion: v2
 name: service-account
 description: Minimal chart for creating one or more Kubernetes service accounts
 type: application
-version: 0.0.2
+version: 0.0.3
 appVersion: "1.0.0"

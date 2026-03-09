@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["clusterRoleBindings"],
+  "properties": {
+    "global": {"type": "object", "additionalProperties": true},
+    "clusterRoleBindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "subjects", "roleRef"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1, "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$"},
+          "labels": {"type": "object", "additionalProperties": {"type": "string"}},
+          "annotations": {"type": "object", "additionalProperties": {"type": "string"}},
+          "subjects": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "name"],
+              "properties": {
+                "apiGroup": {"type": "string"},
+                "kind": {"type": "string", "minLength": 1},
+                "name": {"type": "string", "minLength": 1},
+                "namespace": {"type": "string", "minLength": 1}
+              }
+            }
+          },
+          "roleRef": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["apiGroup", "kind", "name"],
+            "properties": {
+              "apiGroup": {"type": "string", "minLength": 1},
+              "kind": {"type": "string", "minLength": 1},
+              "name": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -21,6 +21,7 @@ Optional per service account:
 - `annotations`
 - `automountServiceAccountToken`
 - `imagePullSecrets[]`
+- `secrets[]`
 
 ## Validation guards
 

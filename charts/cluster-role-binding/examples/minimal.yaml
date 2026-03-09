@@ -1,0 +1,19 @@
+clusterRoleBindings:
+  - name: triggers-eventlistener-clusterbinding
+    subjects:
+      - kind: ServiceAccount
+        name: ci-services
+        namespace: ci
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: tekton-triggers-eventlistener-clusterroles
+  - name: tekton-triggers-clusterbinding
+    subjects:
+      - kind: ServiceAccount
+        name: ci-services
+        namespace: ci
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: tekton-triggers-admin
