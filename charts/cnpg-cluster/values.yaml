@@ -1,0 +1,15 @@
+apiVersion: postgresql.cnpg.io/v1
+
+global: {}
+
+cnpgClusters:
+  - name: example-cluster
+    namespace: default
+    labels: {}
+    annotations: {}
+    spec:
+      description: example cluster
+      imageName: ghcr.io/cloudnative-pg/postgresql:17.4-14-bullseye
+      instances: 1
+      storage:
+        size: 10Gi
