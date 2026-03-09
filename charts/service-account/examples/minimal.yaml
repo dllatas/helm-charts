@@ -5,6 +5,9 @@ serviceAccounts:
       eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/ci-services
     imagePullSecrets:
       - name: registry-creds
+    secrets:
+      - name: ssh-key
+      - name: docker-credentials
   - name: harbor-services
     namespace: storage
     automountServiceAccountToken: false

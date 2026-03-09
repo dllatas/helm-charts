@@ -44,6 +44,17 @@
                 "name": {"type": "string", "minLength": 1}
               }
             }
+          },
+          "secrets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name"],
+              "properties": {
+                "name": {"type": "string", "minLength": 1}
+              }
+            }
           }
         }
       }

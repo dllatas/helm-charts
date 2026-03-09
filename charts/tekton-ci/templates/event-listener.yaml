@@ -41,7 +41,9 @@
         - name: overlays
           value:
             - key: branch_name
-              expression: "has(body.pull_request) ? body.pull_request.head.ref : body.ref.split('/')[2]"
+              expression: "has(body.pull_request) ? body.pull_request.head.ref : body.ref.replace('refs/heads/', '')"
+            - key: branch_slug
+              expression: "(has(body.pull_request) ? body.pull_request.head.ref : body.ref.replace('refs/heads/', '')).replace('/', '-')"
             - key: git_revision
               expression: "has(body.pull_request) ? body.pull_request.head.sha : body.after"
             - key: before_sha

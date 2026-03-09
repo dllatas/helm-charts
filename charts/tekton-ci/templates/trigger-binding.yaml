@@ -17,6 +17,8 @@ spec:
       value: "$(extensions.git_revision)"
     - name: branch-name
       value: "$(extensions.branch_name)"
+    - name: branch-slug
+      value: "$(extensions.branch_slug)"
     - name: event-type
       value: "$(header.X-GitHub-Event)"
     - name: before-sha

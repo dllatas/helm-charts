@@ -1,0 +1,21 @@
+roleBindings:
+  - name: triggers-eventlistener-binding
+    namespace: ci
+    subjects:
+      - kind: ServiceAccount
+        name: ci-services
+        namespace: ci
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: tekton-triggers-eventlistener-roles
+  - name: read-prometheus
+    namespace: observability
+    subjects:
+      - kind: ServiceAccount
+        name: grafana
+        namespace: observability
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: Role
+      name: prometheus-read

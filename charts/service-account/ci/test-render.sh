@@ -18,3 +18,5 @@ if helm template service-account-invalid "$CHART_DIR" -f "$CHART_DIR/examples/in
 fi
 
 echo "service-account render tests passed"
+
+grep -q "^secrets:$" /tmp/service-account-default.yaml

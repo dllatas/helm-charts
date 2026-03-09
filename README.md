@@ -43,6 +43,8 @@ v4.x.x+...
   - `charts/argocd-apps`
   - `charts/namespace`
   - `charts/service-account`
+  - `charts/role-binding`
+  - `charts/cluster-role-binding`
   - `charts/external-secrets`
   - `charts/persistent-volume-claim`
   - `charts/http-routes`
