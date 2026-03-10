@@ -1,0 +1,9 @@
+configMaps:
+  - name: duplicate
+    namespace: default
+    data:
+      a: b
+  - name: duplicate
+    namespace: default
+    data:
+      c: d

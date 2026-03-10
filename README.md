@@ -60,6 +60,13 @@ v4.x.x+...
   - `charts/service`
   - `charts/cnpg-cluster`
   - `charts/cnpg-scheduled-backup`
+  - `charts/config-map`
+  - `charts/gateway`
+  - `charts/request-authentication`
+  - `charts/authorization-policy`
+  - `charts/tcp-route`
+  - `charts/cronjob`
+  - `charts/job`
   - `charts/tekton-ci`
   - `charts/helm-charts-ci`
 

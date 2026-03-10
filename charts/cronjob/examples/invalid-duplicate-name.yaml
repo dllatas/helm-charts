@@ -1,0 +1,8 @@
+apiVersion: batch/v1
+cronJobs:
+  - name: duplicate
+    namespace: default
+    spec: {}
+  - name: duplicate
+    namespace: default
+    spec: {}

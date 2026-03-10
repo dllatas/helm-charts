@@ -1,0 +1,6 @@
+configMaps:
+  - name: example-config
+    namespace: default
+    data:
+      example.conf: |
+        hello=world

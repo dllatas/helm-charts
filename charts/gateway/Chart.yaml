@@ -1,0 +1,6 @@
+apiVersion: v2
+name: gateway
+description: Minimal chart for creating Gateway resources
+type: application
+version: 0.0.1
+appVersion: "1.0.0"

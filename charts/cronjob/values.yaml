@@ -1,0 +1,11 @@
+apiVersion: batch/v1
+
+global: {}
+
+cronJobs:
+  - name: example-cronjob
+    namespace: default
+    labels: {}
+    annotations: {}
+    spec:
+      {}
