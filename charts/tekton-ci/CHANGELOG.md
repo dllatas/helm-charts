@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.5
+
+- Added `run.storageClassName` so Tekton workspace PVCs can target a dedicated storage class.
+
 ## 0.3.4
 
 - Fixed GitHub branch extraction to preserve full slash-named branch names instead of truncating at the first slash.

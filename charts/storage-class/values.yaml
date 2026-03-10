@@ -1,0 +1,10 @@
+storageClasses:
+  - name: example-storage-class
+    provisioner: driver.longhorn.io
+    labels: {}
+    annotations: {}
+    parameters: {}
+    allowVolumeExpansion: true
+    reclaimPolicy: Delete
+    volumeBindingMode: Immediate
+    mountOptions: []

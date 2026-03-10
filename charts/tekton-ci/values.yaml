@@ -49,6 +49,7 @@ deploy:
 
 run:
   pvcSize: 1Gi
+  storageClassName: ""
   pvcAccessModes:
     - ReadWriteOnce
   fsGroup: 65532

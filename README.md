@@ -47,6 +47,7 @@ v4.x.x+...
   - `charts/cluster-role-binding`
   - `charts/external-secrets`
   - `charts/persistent-volume-claim`
+  - `charts/storage-class`
   - `charts/http-routes`
   - `charts/reference-grants`
   - `charts/cluster-secret-store`

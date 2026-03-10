@@ -1,0 +1,18 @@
+storageClasses:
+  - name: longhorn-ci-ephemeral
+    provisioner: driver.longhorn.io
+    allowVolumeExpansion: true
+    reclaimPolicy: Delete
+    volumeBindingMode: Immediate
+    parameters:
+      numberOfReplicas: "1"
+      staleReplicaTimeout: "30"
+      fsType: ext4
+      dataLocality: disabled
+      disableRevisionCounter: "true"
+      dataEngine: v1
+      unmapMarkSnapChainRemoved: ignored
+  - name: local-path-ci
+    provisioner: rancher.io/local-path
+    reclaimPolicy: Delete
+    volumeBindingMode: WaitForFirstConsumer

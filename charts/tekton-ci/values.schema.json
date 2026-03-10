@@ -273,6 +273,9 @@
           "type": "string",
           "minLength": 1
         },
+        "storageClassName": {
+          "type": "string"
+        },
         "pvcAccessModes": {
           "type": "array",
           "minItems": 1,
