@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+
+helm template application-exact charts/application -f charts/application/examples/exact-names.yaml >"$tmpdir/exact.yaml"
+
+grep -q '^kind: Deployment$' "$tmpdir/exact.yaml"
+grep -q '^  name: example-api$' "$tmpdir/exact.yaml"
+grep -q '^kind: Service$' "$tmpdir/exact.yaml"
+grep -q '^  name: example-api$' "$tmpdir/exact.yaml"
+grep -q '^kind: PersistentVolumeClaim$' "$tmpdir/exact.yaml"
+grep -q '^  name: data$' "$tmpdir/exact.yaml"
+grep -q '^      app: example-api$' "$tmpdir/exact.yaml"
+grep -q '^      serviceAccountName: example-api$' "$tmpdir/exact.yaml"
+
+echo "application render tests passed"

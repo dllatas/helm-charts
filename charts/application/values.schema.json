@@ -14,6 +14,21 @@
       "type": "string",
       "maxLength": 63
     },
+    "deploymentNameOverride": {
+      "type": "string",
+      "maxLength": 63
+    },
+    "resourceNameStrategy": {
+      "type": "string",
+      "enum": [
+        "prefixed",
+        "exact"
+      ]
+    },
+    "global": {
+      "type": "object",
+      "additionalProperties": true
+    },
     "replicaCount": {
       "type": "integer",
       "minimum": 1
@@ -31,6 +46,12 @@
       }
     },
     "podLabels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "selectorLabels": {
       "type": "object",
       "additionalProperties": {
         "type": "string"
