@@ -17,7 +17,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "application.fullname" . }}
+  name: {{ include "application.deploymentName" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "application.commonLabels" . | nindent 4 }}
@@ -29,11 +29,11 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "application.selectorLabels" . | nindent 6 }}
+      {{- include "application.effectiveSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "application.selectorLabels" . | nindent 8 }}
+        {{- include "application.effectiveSelectorLabels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -58,7 +58,7 @@ spec:
         {{- range $pvc := .Values.persistentVolumeClaims }}
         - name: {{ $pvc.name }}
           persistentVolumeClaim:
-            claimName: {{ printf "%s-%s" (include "application.fullname" $) $pvc.name | trunc 63 | trimSuffix "-" }}
+            claimName: {{ include "application.pvcName" (list $ $pvc) }}
         {{- end }}
       {{- end }}
       containers:

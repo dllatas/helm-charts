@@ -1,0 +1,30 @@
+deploymentNameOverride: example-api
+resourceNameStrategy: exact
+
+selectorLabels:
+  app: example-api
+
+serviceAccountName: example-api
+
+containers:
+  - name: app
+    image: ghcr.io/nginx/nginx-unprivileged:1.27
+    ports:
+      - name: http
+        containerPort: 8080
+    volumeMounts:
+      - name: data
+        mountPath: /data
+
+services:
+  - name: example-api
+    ports:
+      - name: http
+        port: 80
+        targetPort: http
+
+persistentVolumeClaims:
+  - name: data
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi

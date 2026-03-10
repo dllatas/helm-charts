@@ -1,5 +1,8 @@
 nameOverride: ""
 fullnameOverride: ""
+deploymentNameOverride: ""
+resourceNameStrategy: prefixed
+global: {}
 
 replicaCount: 1
 
@@ -7,6 +10,7 @@ replicaCount: 1
 deploymentAnnotations: {}
 podAnnotations: {}
 podLabels: {}
+selectorLabels: {}
 
 # Optional pod-level settings
 imagePullSecrets: []
