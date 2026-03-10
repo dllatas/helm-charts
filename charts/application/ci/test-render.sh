@@ -15,6 +15,8 @@ grep -q '^    argocd.argoproj.io/sync-wave: "20"$' "$tmpdir/exact.yaml"
 grep -q '^kind: PersistentVolumeClaim$' "$tmpdir/exact.yaml"
 grep -q '^  name: data$' "$tmpdir/exact.yaml"
 grep -q '^      app: example-api$' "$tmpdir/exact.yaml"
+grep -q '^  strategy:$' "$tmpdir/exact.yaml"
+grep -q '^    type: Recreate$' "$tmpdir/exact.yaml"
 grep -q '^      serviceAccountName: example-api$' "$tmpdir/exact.yaml"
 
 echo "application render tests passed"

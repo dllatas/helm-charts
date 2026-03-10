@@ -1,5 +1,7 @@
 deploymentNameOverride: example-api
 resourceNameStrategy: exact
+deploymentStrategy:
+  type: Recreate
 
 selectorLabels:
   app: example-api

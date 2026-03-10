@@ -8,6 +8,7 @@ replicaCount: 1
 
 # Optional annotations/labels
 deploymentAnnotations: {}
+deploymentStrategy: {}
 podAnnotations: {}
 podLabels: {}
 selectorLabels: {}
