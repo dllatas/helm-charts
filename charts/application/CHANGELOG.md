@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.3
+
+- Added optional `deploymentStrategy` passthrough for adoption-safe rollout control.
+- Documented `Recreate` strategy for `ReadWriteOnce` single-replica workloads.
+- Added render coverage for strategy rendering.
+
 ## 0.0.2
 
 - Added `deploymentNameOverride` for exact deployment naming.

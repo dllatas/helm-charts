@@ -39,6 +39,10 @@
         "type": "string"
       }
     },
+    "deploymentStrategy": {
+      "type": "object",
+      "additionalProperties": true
+    },
     "podAnnotations": {
       "type": "object",
       "additionalProperties": {
