@@ -1,0 +1,11 @@
+apiVersion: security.istio.io/v1
+
+global: {}
+
+requestAuthentications:
+  - name: example-request-authentication
+    namespace: default
+    labels: {}
+    annotations: {}
+    spec:
+      {}

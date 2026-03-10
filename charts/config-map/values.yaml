@@ -1,0 +1,10 @@
+global: {}
+
+configMaps:
+  - name: example-config
+    namespace: default
+    labels: {}
+    annotations: {}
+    data:
+      example.conf: |
+        hello=world

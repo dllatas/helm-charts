@@ -1,0 +1,28 @@
+{{- range $resource := .Values.jobs }}
+{{- $enabled := true }}
+{{- if hasKey $resource "isEnabled" }}
+{{- $enabled = $resource.isEnabled }}
+{{- end }}
+{{- if $enabled }}
+---
+apiVersion: {{ $.Values.apiVersion }}
+kind: Job
+metadata:
+  name: {{ $resource.name }}
+  namespace: {{ $resource.namespace }}
+  labels:
+    helm.sh/chart: {{ printf "%s-%s" $.Chart.Name $.Chart.Version | trunc 63 | trimSuffix "-" | quote }}
+    app.kubernetes.io/name: {{ $.Chart.Name | quote }}
+    app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+{{- with $resource.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- with $resource.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+{{ toYaml $resource.spec | indent 2 }}
+{{- end }}
+{{- end }}

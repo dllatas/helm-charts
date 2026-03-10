@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+jobs:
+  - name: disabled-job
+    namespace: default
+    isEnabled: false
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: example
+              image: busybox:1.36.1
+              command: ["sh", "-c", "echo hello"]

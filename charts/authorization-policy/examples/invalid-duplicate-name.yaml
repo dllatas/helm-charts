@@ -1,0 +1,8 @@
+apiVersion: security.istio.io/v1
+authorizationPolicies:
+  - name: duplicate
+    namespace: default
+    spec: {}
+  - name: duplicate
+    namespace: default
+    spec: {}

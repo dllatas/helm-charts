@@ -1,0 +1,6 @@
+apiVersion: security.istio.io/v1
+authorizationPolicies:
+  - name: example-authorization-policy
+    namespace: default
+    spec:
+      {}
