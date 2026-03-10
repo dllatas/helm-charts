@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.4
+
+- Fixed `HTTPRoute.backendRefs` rendering to honor `resourceNameStrategy: exact`.
+- Added render coverage to ensure exact-named routes target exact-named services.
+
 ## 0.0.3
 
 - Added optional `deploymentStrategy` passthrough for adoption-safe rollout control.

@@ -63,7 +63,7 @@ spec:
       {{- end }}
       backendRefs:
         {{- range $backend := $rule.backendRefs }}
-        - name: {{ printf "%s-%s" (include "application.fullname" $) $backend.service | trunc 63 | trimSuffix "-" }}
+        - name: {{ include "application.serviceName" (list $ (dict "name" $backend.service)) }}
           port: {{ $backend.port }}
           {{- if hasKey $backend "weight" }}
           weight: {{ $backend.weight }}
