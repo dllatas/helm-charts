@@ -53,7 +53,19 @@
           },
           "spec": {
             "type": "object",
-            "additionalProperties": true
+            "additionalProperties": true,
+            "required": [
+              "rules"
+            ],
+            "properties": {
+              "parentRefs": {
+                "type": "array"
+              },
+              "rules": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
           }
         }
       }

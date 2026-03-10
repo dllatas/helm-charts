@@ -3,4 +3,10 @@ tcpRoutes:
   - name: example-tcp-route
     namespace: default
     spec:
-      {}
+      parentRefs:
+        - namespace: staging
+          name: tunnel
+      rules:
+        - backendRefs:
+            - name: tunnel
+              port: 7000

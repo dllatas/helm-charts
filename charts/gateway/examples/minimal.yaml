@@ -3,4 +3,8 @@ gateways:
   - name: example-gateway
     namespace: default
     spec:
-      {}
+      gatewayClassName: istio
+      listeners:
+        - name: http
+          protocol: HTTP
+          port: 80

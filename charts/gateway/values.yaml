@@ -8,4 +8,8 @@ gateways:
     labels: {}
     annotations: {}
     spec:
-      {}
+      gatewayClassName: istio
+      listeners:
+        - name: http
+          protocol: HTTP
+          port: 80
