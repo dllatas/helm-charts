@@ -53,7 +53,21 @@
           },
           "spec": {
             "type": "object",
-            "additionalProperties": true
+            "additionalProperties": true,
+            "required": [
+              "gatewayClassName",
+              "listeners"
+            ],
+            "properties": {
+              "gatewayClassName": {
+                "type": "string",
+                "minLength": 1
+              },
+              "listeners": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
           }
         }
       }

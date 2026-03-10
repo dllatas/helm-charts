@@ -18,6 +18,7 @@ Required per resource:
 - `name`
 - `namespace`
 - `spec`
+- `spec.rules`
 
 Optional per resource:
 

@@ -8,6 +8,8 @@ helm lint --strict "$CHART_DIR"
 helm template gateway-positive "$CHART_DIR" -f "$CHART_DIR/examples/minimal.yaml" >"/tmp/gateway-minimal.yaml"
 
 grep -q '^kind: Gateway$' "/tmp/gateway-minimal.yaml"
+grep -q '^  gatewayClassName: istio$' "/tmp/gateway-minimal.yaml"
+grep -q '^  listeners:$' "/tmp/gateway-minimal.yaml"
 
 if helm template gateway-invalid "$CHART_DIR" -f "$CHART_DIR/examples/invalid-duplicate-name.yaml" >"/tmp/gateway-invalid.yaml" 2>"/tmp/gateway-invalid.err"; then
   echo "Expected invalid-duplicate-name.yaml to fail for gateway"

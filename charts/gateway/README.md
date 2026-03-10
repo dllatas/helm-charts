@@ -18,6 +18,8 @@ Required per resource:
 - `name`
 - `namespace`
 - `spec`
+- `spec.gatewayClassName`
+- `spec.listeners`
 
 Optional per resource:
 

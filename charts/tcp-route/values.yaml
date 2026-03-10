@@ -8,4 +8,10 @@ tcpRoutes:
     labels: {}
     annotations: {}
     spec:
-      {}
+      parentRefs:
+        - namespace: staging
+          name: tunnel
+      rules:
+        - backendRefs:
+            - name: tunnel
+              port: 7000
