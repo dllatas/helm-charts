@@ -22,7 +22,7 @@ Environment-agnostic Helm v4 chart for running Kubernetes applications with:
 - `nameOverride`: override chart name portion in generated resource names.
 - `fullnameOverride`: override the full generated resource name.
 - `deploymentNameOverride`: override the rendered `Deployment` name directly.
-- `resourceNameStrategy`: `prefixed` (default) or `exact` for `Service` and PVC names.
+- `resourceNameStrategy`: `prefixed` (default) or `exact` for `Service`, `HTTPRoute`, and PVC names.
 - `selectorLabels`: override the default selector labels used by the `Deployment` and generated `Service` resources.
 - `global`: ignored by the chart itself, but accepted so the chart can be used as a dependency in composition charts.
 
@@ -75,6 +75,12 @@ Each route must define:
 - `name`
 - `parentRefs[]`
 - `rules[]`
+
+Optional per route:
+
+- `labels`
+- `annotations`
+- `hostnames[]`
 
 Each backend in `rules[].backendRefs[]` must define:
 

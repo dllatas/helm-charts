@@ -6,6 +6,7 @@ CHART_DIR="$ROOT_DIR/charts/service-account"
 
 helm lint --strict "$CHART_DIR"
 helm template service-account-default "$CHART_DIR" -f "$CHART_DIR/examples/minimal.yaml" >/tmp/service-account-default.yaml
+helm template service-account-defaults "$CHART_DIR" -f "$CHART_DIR/examples/defaults.yaml" >/tmp/service-account-defaults.yaml
 
 if [ "$(grep -c '^kind: ServiceAccount$' /tmp/service-account-default.yaml)" -ne 2 ]; then
   echo "Expected minimal example to render two ServiceAccount resources"
@@ -20,3 +21,6 @@ fi
 echo "service-account render tests passed"
 
 grep -q "^secrets:$" /tmp/service-account-default.yaml
+grep -q "^  namespace: ci$" /tmp/service-account-defaults.yaml
+grep -q "^    argocd.argoproj.io/sync-wave: \"-10\"$" /tmp/service-account-defaults.yaml
+grep -q "^imagePullSecrets:$" /tmp/service-account-defaults.yaml

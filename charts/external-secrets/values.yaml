@@ -1,5 +1,14 @@
 apiVersion: external-secrets.io/v1beta1
 
+defaults:
+  refreshInterval: 1h
+  labels: {}
+  annotations: {}
+  secretStoreRef: {}
+  target:
+    creationPolicy: Owner
+    deletionPolicy: Retain
+
 externalSecrets:
   - name: example
     namespace: default

@@ -2,5 +2,5 @@ apiVersion: v2
 name: external-secrets
 description: Minimal chart for creating ExternalSecret resources
 type: application
-version: 0.0.3
+version: 0.0.4
 appVersion: "1.0.0"

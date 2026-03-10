@@ -23,6 +23,20 @@ services:
         port: 80
         targetPort: http
 
+httpRoutes:
+  - name: example-api
+    annotations:
+      argocd.argoproj.io/sync-wave: "20"
+    parentRefs:
+      - name: gateway
+        namespace: ingress
+    hostnames:
+      - example.internal
+    rules:
+      - backendRefs:
+          - service: example-api
+            port: 80
+
 persistentVolumeClaims:
   - name: data
     accessModes:

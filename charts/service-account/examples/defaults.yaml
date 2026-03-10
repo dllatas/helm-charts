@@ -1,0 +1,12 @@
+defaults:
+  namespace: ci
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
+  imagePullSecrets:
+    - name: docker-credentials
+
+serviceAccounts:
+  - name: builder
+  - name: runner
+    annotations:
+      example.com/role: runner

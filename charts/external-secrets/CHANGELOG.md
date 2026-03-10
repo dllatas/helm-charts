@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.4
+
+- Added `defaults` support for shared namespace, refresh interval, metadata, secret store references, and target policies.
+
 ## 0.0.3
 
 - Republished the `external-secrets` chart after the original master publish was blocked by a CI validation failure in unrelated charts.
