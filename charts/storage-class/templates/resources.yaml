@@ -1,0 +1,37 @@
+{{- range $resource := .Values.storageClasses }}
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ $resource.name }}
+  labels:
+    helm.sh/chart: {{ printf "%s-%s" $.Chart.Name $.Chart.Version | trunc 63 | trimSuffix "-" | quote }}
+    app.kubernetes.io/name: {{ $.Chart.Name | quote }}
+    app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+{{- with $resource.labels }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- with $resource.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+provisioner: {{ $resource.provisioner | quote }}
+{{- with $resource.parameters }}
+parameters:
+{{ toYaml . | indent 2 }}
+{{- end }}
+{{- with $resource.allowVolumeExpansion }}
+allowVolumeExpansion: {{ . }}
+{{- end }}
+{{- with $resource.reclaimPolicy }}
+reclaimPolicy: {{ . }}
+{{- end }}
+{{- with $resource.volumeBindingMode }}
+volumeBindingMode: {{ . }}
+{{- end }}
+{{- with $resource.mountOptions }}
+mountOptions:
+{{ toYaml . | indent 2 }}
+{{- end }}
+{{- end }}

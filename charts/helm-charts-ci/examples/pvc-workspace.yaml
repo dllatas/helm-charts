@@ -3,6 +3,7 @@ github:
 
 run:
   workspaceType: volumeClaimTemplate
-  pvcSize: 2Gi
+  pvcSize: 1Gi
+  storageClassName: longhorn-ci-ephemeral
   pvcAccessModes:
     - ReadWriteOnce

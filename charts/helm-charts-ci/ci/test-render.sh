@@ -12,6 +12,8 @@ helm template helm-charts-ci-pvc "$CHART_DIR" -f "$CHART_DIR/examples/pvc-worksp
 
 grep -q 'volumeClaimTemplate:' /tmp/helm-charts-ci-default.yaml
 grep -q 'volumeClaimTemplate:' /tmp/helm-charts-ci-pvc.yaml
+grep -q 'storage: 1Gi' /tmp/helm-charts-ci-default.yaml
+grep -q 'storageClassName: "longhorn-ci-ephemeral"' /tmp/helm-charts-ci-pvc.yaml
 grep -q 'export TARGET_BRANCH="master"' /tmp/helm-charts-ci-default.yaml
 grep -q 'export DIFF_MODE="merge-base"' /tmp/helm-charts-ci-default.yaml
 grep -q 'export DIFF_MODE="push-range"' /tmp/helm-charts-ci-default.yaml

@@ -86,6 +86,11 @@ Each entry in `triggers[]` defines one webhook trigger:
 - `image.reference`, `image.dockerfile`, `image.context` only for `pipeline.mode=imageBuild`
 - image tags are derived from a sanitized branch slug; the full branch name is still passed through the pipeline metadata
 
+## Workspace PVCs
+
+- `run.pvcSize` defaults to `1Gi`
+- `run.storageClassName` can target a dedicated storage class for ephemeral Tekton workspaces
+
 ## HTTPRoute
 
 Enable with `httpRoute.enabled: true`.

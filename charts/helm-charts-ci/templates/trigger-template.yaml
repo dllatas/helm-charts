@@ -30,6 +30,9 @@ spec:
           - name: source
             volumeClaimTemplate:
               spec:
+                {{- with .Values.run.storageClassName }}
+                storageClassName: {{ . | quote }}
+                {{- end }}
                 accessModes:
                   {{- range $mode := .Values.run.pvcAccessModes }}
                   - {{ $mode | quote }}

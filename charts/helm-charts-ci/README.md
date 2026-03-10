@@ -35,8 +35,10 @@ helm upgrade --install helm-charts-ci ./charts/helm-charts-ci -n ci
 Default `pipeline.toolsImage` is `quay.io/helmpack/chart-testing:v3.14.0`.
 Default `run.skipE2E` is `true` for in-cluster Tekton runs.
 Default `run.workspaceType` is `volumeClaimTemplate`.
+Default `run.pvcSize` is `1Gi`.
 This chart uses separate Tekton Tasks for clone, validate, and publish, so the checked-out repository must live on a shared PVC-backed workspace.
 `emptyDir` is not supported for this chart.
+Set `run.storageClassName` when CI workspaces should use a dedicated ephemeral storage class.
 
 If terminal `PipelineRun` and `TaskRun` objects are retained for a long time, their workspace PVCs accumulate as well.
 Plan to prune completed Tekton runs in-cluster; [Tekton Pruner](https://github.com/tektoncd/pruner) is the right follow-up.

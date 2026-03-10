@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["storageClasses"],
+  "properties": {
+    "global": {"type": "object", "additionalProperties": true},
+    "storageClasses": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "provisioner"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "provisioner": {"type": "string", "minLength": 1},
+          "labels": {"type": "object", "additionalProperties": {"type": "string"}},
+          "annotations": {"type": "object", "additionalProperties": {"type": "string"}},
+          "parameters": {"type": "object", "additionalProperties": {"type": "string"}},
+          "allowVolumeExpansion": {"type": "boolean"},
+          "reclaimPolicy": {"type": "string", "enum": ["Delete", "Retain"]},
+          "volumeBindingMode": {"type": "string", "enum": ["Immediate", "WaitForFirstConsumer"]},
+          "mountOptions": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    }
+  }
+}

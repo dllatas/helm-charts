@@ -1,0 +1,5 @@
+storageClasses:
+  - name: longhorn-ci-ephemeral
+    provisioner: driver.longhorn.io
+  - name: longhorn-ci-ephemeral
+    provisioner: rancher.io/local-path

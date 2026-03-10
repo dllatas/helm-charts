@@ -12,6 +12,7 @@ helm template tekton-ci-v1 "$CHART_DIR" -f "$CHART_DIR/examples/api-v1.yaml" >/t
 helm template tekton-ci-inline "$CHART_DIR" -f "$CHART_DIR/examples/inline-deploy-netcup-apps.yaml" >/tmp/tekton-ci-inline.yaml
 
 grep -q "branch_slug" /tmp/tekton-ci-single.yaml
+grep -q 'storageClassName: "longhorn-ci-ephemeral"' /tmp/tekton-ci-inline.yaml
 if grep -q "split('/')\[2\]" /tmp/tekton-ci-single.yaml; then
   echo "Expected branch extraction to preserve slash-named branches"
   exit 1

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.12
+
+- Added `run.storageClassName` so Tekton workspace PVCs can use a dedicated storage class.
+- Reduced the default workspace request from `2Gi` to `1Gi` for ephemeral CI workspaces.
+
 ## 0.1.11
 
 - Split validation and publish diff baselines so rebased branch pushes validate against the target branch while target-branch publishes use the exact push range.
