@@ -18,6 +18,8 @@ Required per resource:
 - `name`
 - `namespace`
 - `spec`
+- `spec.schedule`
+- `spec.jobTemplate`
 
 Optional per resource:
 
