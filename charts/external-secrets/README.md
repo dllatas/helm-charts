@@ -12,13 +12,17 @@ Minimal Helm v4 chart for creating External Secrets Operator `ExternalSecret` re
 Top-level:
 
 - `apiVersion`: `external-secrets.io/v1beta1` or `external-secrets.io/v1`
+- `defaults.namespace`
+- `defaults.refreshInterval`
+- `defaults.labels`, `defaults.annotations`
+- `defaults.secretStoreRef`
+- `defaults.target.creationPolicy`, `defaults.target.deletionPolicy`
 
 Required per external secret:
 
 - `name`
-- `namespace`
-- `secretStoreRef.kind`
-- `secretStoreRef.name`
+- `namespace` unless `defaults.namespace` is set
+- `secretStoreRef.kind` and `secretStoreRef.name`, unless `defaults.secretStoreRef` is set
 - `target.name`
 - exactly one of `data` or `dataFrom`
 

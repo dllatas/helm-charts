@@ -72,3 +72,13 @@ app.kubernetes.io/instance: {{ .Release.Name | quote }}
 {{- printf "%s-%s" (include "application.fullname" $root) $pvc.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "application.httpRouteName" -}}
+{{- $root := index . 0 -}}
+{{- $route := index . 1 -}}
+{{- if eq (default "prefixed" $root.Values.resourceNameStrategy) "exact" -}}
+{{- $route.name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" (include "application.fullname" $root) $route.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}

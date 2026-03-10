@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.4
+
+- Added `defaults` support for shared namespace, labels, annotations, token behavior, image pull secrets, and referenced secrets.
+
 ## 0.0.3
 
 - Added optional `secrets[]` support so service accounts can reference named secrets directly.

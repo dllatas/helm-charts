@@ -13,10 +13,19 @@ Required:
 
 - `serviceAccounts[]`
 - `serviceAccounts[].name`
-- `serviceAccounts[].namespace`
+
+Optional top-level defaults:
+
+- `defaults.namespace`
+- `defaults.labels`
+- `defaults.annotations`
+- `defaults.automountServiceAccountToken`
+- `defaults.imagePullSecrets[]`
+- `defaults.secrets[]`
 
 Optional per service account:
 
+- `namespace` (required unless `defaults.namespace` is set)
 - `labels`
 - `annotations`
 - `automountServiceAccountToken`
