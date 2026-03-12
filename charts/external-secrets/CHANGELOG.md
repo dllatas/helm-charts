@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.5
+
+- Defaulted the chart to `external-secrets.io/v1`.
+- Kept `external-secrets.io/v1beta1` as an explicit override for compatibility.
+
 ## 0.0.4
 
 - Added `defaults` support for shared namespace, refresh interval, metadata, secret store references, and target policies.

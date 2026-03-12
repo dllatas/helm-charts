@@ -5,7 +5,10 @@
   "required": ["apiVersion", "clusterSecretStores"],
   "properties": {
     "global": {"type": "object", "additionalProperties": true},
-    "apiVersion": {"type": "string", "enum": ["external-secrets.io/v1beta1"]},
+    "apiVersion": {
+      "type": "string",
+      "enum": ["external-secrets.io/v1beta1", "external-secrets.io/v1"]
+    },
     "clusterSecretStores": {
       "type": "array",
       "minItems": 1,

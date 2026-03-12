@@ -11,7 +11,7 @@ Minimal Helm v4 chart for creating External Secrets Operator `ExternalSecret` re
 
 Top-level:
 
-- `apiVersion`: `external-secrets.io/v1beta1` or `external-secrets.io/v1`
+- `apiVersion`: defaults to `external-secrets.io/v1`; `external-secrets.io/v1beta1` remains available as an explicit override
 - `defaults.namespace`
 - `defaults.refreshInterval`
 - `defaults.labels`, `defaults.annotations`
