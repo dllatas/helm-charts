@@ -19,6 +19,8 @@ spec:
       metadata:
         namespace: {{ .Release.Namespace }}
         generateName: {{ printf "%s-" .Values.pipeline.name | quote }}
+        labels:
+          {{- include "helm-charts-ci.pipelineRunLabels" . | nindent 10 }}
       spec:
         serviceAccountName: {{ .Values.pipeline.serviceAccountName }}
         pipelineRef:
@@ -29,6 +31,9 @@ spec:
         workspaces:
           - name: source
             volumeClaimTemplate:
+              metadata:
+                labels:
+                  {{- include "helm-charts-ci.workspaceLabels" (dict "root" . "workspace" "source") | nindent 18 }}
               spec:
                 {{- with .Values.run.storageClassName }}
                 storageClassName: {{ . | quote }}

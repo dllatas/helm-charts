@@ -27,6 +27,8 @@ spec:
       metadata:
         namespace: {{ .Release.Namespace }}
         generateName: {{ printf "%s-run-" (include "tekton-ci.fullname" .) | quote }}
+        labels:
+          {{- include "tekton-ci.pipelineRunLabels" . | nindent 10 }}
       spec:
         serviceAccountName: {{ .Values.pipeline.serviceAccountName }}
         pipelineRef:
@@ -37,6 +39,9 @@ spec:
         workspaces:
           - name: shared-data
             volumeClaimTemplate:
+              metadata:
+                labels:
+                  {{- include "tekton-ci.workspaceLabels" (dict "root" . "workspace" "shared-data") | nindent 18 }}
               spec:
                 {{- with .Values.run.storageClassName }}
                 storageClassName: {{ . | quote }}
