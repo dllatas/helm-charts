@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.6
+
+- Added a stable `harokilabs.com/tekton-run-id` label to generated `PipelineRun` objects.
+- Added the same run correlation label plus `harokilabs.com/tekton-workspace` to workspace PVC templates so runs and PVCs can be joined directly.
+
 ## 0.3.5
 
 - Added `run.storageClassName` so Tekton workspace PVCs can target a dedicated storage class.
