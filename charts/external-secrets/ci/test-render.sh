@@ -10,7 +10,7 @@ helm template external-secrets-data-from "$CHART_DIR" -f "$CHART_DIR/examples/da
 helm template external-secrets-v1 "$CHART_DIR" -f "$CHART_DIR/examples/api-v1.yaml" >/tmp/external-secrets-v1.yaml
 helm template external-secrets-defaults "$CHART_DIR" -f "$CHART_DIR/examples/defaults.yaml" >/tmp/external-secrets-defaults.yaml
 
-grep -q '^apiVersion: external-secrets.io/v1beta1$' /tmp/external-secrets-data.yaml
+grep -q '^apiVersion: external-secrets.io/v1$' /tmp/external-secrets-data.yaml
 grep -q '^kind: ExternalSecret$' /tmp/external-secrets-data.yaml
 grep -q '^  dataFrom:$' /tmp/external-secrets-data-from.yaml
 grep -q '^apiVersion: external-secrets.io/v1$' /tmp/external-secrets-v1.yaml

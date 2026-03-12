@@ -11,7 +11,7 @@ Minimal Helm v4 chart for creating ClusterSecretStore resources.
 
 Top-level:
 
-- `apiVersion`: defaults to `external-secrets.io/v1beta1`
+- `apiVersion`: defaults to `external-secrets.io/v1`
 
 Required per resource:
 
