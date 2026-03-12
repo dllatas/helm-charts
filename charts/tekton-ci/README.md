@@ -10,6 +10,17 @@ Environment-agnostic Tekton CI bundle chart for webhook-driven pipelines.
 - `EventListener` (single listener or per-trigger listeners)
 - `HTTPRoute` (optional)
 
+## Run Correlation Labels
+
+Generated `PipelineRun` objects carry `harokilabs.com/tekton-run-id: "$(uid)"`.
+Tekton propagates PipelineRun labels onto child `TaskRun` objects, and this chart stamps the same label onto the workspace PVC template together with `harokilabs.com/tekton-workspace`.
+
+That gives one stable join key across:
+
+- `PipelineRun`
+- child `TaskRun`s
+- dynamically created workspace PVCs
+
 ## Not included in this chart
 
 - Namespace, service account

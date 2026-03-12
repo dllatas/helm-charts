@@ -18,6 +18,17 @@ Bootstrap chart for this repository CI/CD flow on Tekton.
   - target branch matches `publish.targetBranch` (default `master`)
 - Uses the exact push SHA range for target-branch publish so branch rebases do not affect what gets published.
 
+## Run Correlation Labels
+
+Generated `PipelineRun` objects carry `harokilabs.com/tekton-run-id: "$(uid)"`.
+Tekton propagates PipelineRun labels onto child `TaskRun` objects, and this chart stamps the same label onto the shared workspace PVC template together with `harokilabs.com/tekton-workspace`.
+
+That gives one stable join key across:
+
+- `PipelineRun`
+- child `TaskRun`s
+- dynamically created workspace PVCs
+
 ## Prerequisites
 
 - Tekton Pipelines + Triggers installed

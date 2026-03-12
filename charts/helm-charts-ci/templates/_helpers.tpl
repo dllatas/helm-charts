@@ -23,3 +23,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 {{- end -}}
+
+{{- define "helm-charts-ci.pipelineRunLabels" -}}
+{{- include "helm-charts-ci.commonLabels" . }}
+tekton.dev/pipeline: {{ .Values.pipeline.name | quote }}
+harokilabs.com/tekton-run-id: "$(uid)"
+{{- end -}}
+
+{{- define "helm-charts-ci.workspaceLabels" -}}
+{{- $root := .root -}}
+{{- include "helm-charts-ci.commonLabels" $root }}
+tekton.dev/pipeline: {{ $root.Values.pipeline.name | quote }}
+harokilabs.com/tekton-run-id: "$(uid)"
+harokilabs.com/tekton-workspace: {{ .workspace | quote }}
+{{- end -}}

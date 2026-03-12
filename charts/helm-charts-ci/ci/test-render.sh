@@ -14,6 +14,8 @@ grep -q 'volumeClaimTemplate:' /tmp/helm-charts-ci-default.yaml
 grep -q 'volumeClaimTemplate:' /tmp/helm-charts-ci-pvc.yaml
 grep -q 'storage: 1Gi' /tmp/helm-charts-ci-default.yaml
 grep -q 'storageClassName: "longhorn-ci-ephemeral"' /tmp/helm-charts-ci-pvc.yaml
+grep -q 'harokilabs.com/tekton-run-id: "\$(uid)"' /tmp/helm-charts-ci-default.yaml
+grep -q 'harokilabs.com/tekton-workspace: "source"' /tmp/helm-charts-ci-default.yaml
 grep -q 'export TARGET_BRANCH="master"' /tmp/helm-charts-ci-default.yaml
 grep -q 'export DIFF_MODE="merge-base"' /tmp/helm-charts-ci-default.yaml
 grep -q 'export DIFF_MODE="push-range"' /tmp/helm-charts-ci-default.yaml
