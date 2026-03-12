@@ -16,6 +16,12 @@ grep -q 'storage: 1Gi' /tmp/helm-charts-ci-default.yaml
 grep -q 'storageClassName: "longhorn-ci-ephemeral"' /tmp/helm-charts-ci-pvc.yaml
 grep -q 'harokilabs.com/tekton-run-id: "\$(uid)"' /tmp/helm-charts-ci-default.yaml
 grep -q 'harokilabs.com/tekton-workspace: "source"' /tmp/helm-charts-ci-default.yaml
+grep -q "body.ref.replace('refs/heads/', '')" /tmp/helm-charts-ci-default.yaml
+grep -q 'branch_slug' /tmp/helm-charts-ci-default.yaml
+if grep -q "body.ref.split('/')\\[2\\]" /tmp/helm-charts-ci-default.yaml; then
+  echo "Expected branch extraction to preserve slash-named branches"
+  exit 1
+fi
 grep -q 'export TARGET_BRANCH="master"' /tmp/helm-charts-ci-default.yaml
 grep -q 'export DIFF_MODE="merge-base"' /tmp/helm-charts-ci-default.yaml
 grep -q 'export DIFF_MODE="push-range"' /tmp/helm-charts-ci-default.yaml

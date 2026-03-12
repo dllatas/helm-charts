@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.14
+
+- Fixed push branch extraction to preserve slash-named branches by stripping the `refs/heads/` prefix instead of splitting on `/`.
+- Added an explicit `branch_slug` webhook overlay to keep the chart aligned with `tekton-ci` branch metadata handling.
+
 ## 0.1.13
 
 - Added a stable `harokilabs.com/tekton-run-id` label to generated `PipelineRun` objects.

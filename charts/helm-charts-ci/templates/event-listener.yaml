@@ -47,4 +47,6 @@ spec:
                 - key: head_ref
                   expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.head.sha : body.after"
                 - key: branch_name
-                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.base.ref : body.ref.split('/')[2]"
+                  expression: "header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.base.ref : body.ref.replace('refs/heads/', '')"
+                - key: branch_slug
+                  expression: "(header.canonical('X-GitHub-Event') == 'pull_request' ? body.pull_request.base.ref : body.ref.replace('refs/heads/', '')).replace('/', '-')"
