@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.6
+
+- Rendered the External Secrets Operator `v1` defaulted `remoteRef` and target template fields explicitly to avoid false Argo drift after reconciliation.
+
 ## 0.0.5
 
 - Defaulted the chart to `external-secrets.io/v1`.
