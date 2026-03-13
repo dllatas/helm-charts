@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.7
+
+- Added `eventListener.nodeSelector` and `eventListener.affinity` so always-on Tekton listeners can avoid small nodes.
+- Added `run.nodeSelector` and `run.affinity` so generated `PipelineRun` pods and their PVC-backed workspaces can target a specific node class.
+
 ## 0.3.6
 
 - Added a stable `harokilabs.com/tekton-run-id` label to generated `PipelineRun` objects.

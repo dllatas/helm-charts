@@ -25,6 +25,7 @@ Environment-agnostic Helm v4 chart for running Kubernetes applications with:
 - `resourceNameStrategy`: `prefixed` (default) or `exact` for `Service`, `HTTPRoute`, and PVC names.
 - `deploymentStrategy`: optional raw `Deployment.spec.strategy` passthrough. Use `type: Recreate` for single-replica `ReadWriteOnce` workloads.
 - `selectorLabels`: override the default selector labels used by the `Deployment` and generated `Service` resources.
+- `nodeSelector` and `affinity`: optional pod-level scheduling controls passed through to `Deployment.spec.template.spec`.
 - `global`: ignored by the chart itself, but accepted so the chart can be used as a dependency in composition charts.
 
 Without overrides, the default fullname is based on:

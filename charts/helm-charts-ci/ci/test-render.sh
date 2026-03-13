@@ -9,11 +9,15 @@ helm template helm-charts-ci-default "$CHART_DIR" -f "$CHART_DIR/examples/defaul
 helm template helm-charts-ci-no-route "$CHART_DIR" -f "$CHART_DIR/examples/no-route.yaml" >/tmp/helm-charts-ci-no-route.yaml
 helm template helm-charts-ci-v1 "$CHART_DIR" -f "$CHART_DIR/examples/api-v1.yaml" >/tmp/helm-charts-ci-v1.yaml
 helm template helm-charts-ci-pvc "$CHART_DIR" -f "$CHART_DIR/examples/pvc-workspace.yaml" >/tmp/helm-charts-ci-pvc.yaml
+helm template helm-charts-ci-general "$CHART_DIR" -f "$CHART_DIR/examples/general-capacity.yaml" >/tmp/helm-charts-ci-general.yaml
 
 grep -q 'volumeClaimTemplate:' /tmp/helm-charts-ci-default.yaml
 grep -q 'volumeClaimTemplate:' /tmp/helm-charts-ci-pvc.yaml
 grep -q 'storage: 1Gi' /tmp/helm-charts-ci-default.yaml
 grep -q 'storageClassName: "longhorn-ci-ephemeral"' /tmp/helm-charts-ci-pvc.yaml
+grep -q 'kubernetesResource:' /tmp/helm-charts-ci-general.yaml
+grep -q 'harokilabs.com/capacity-class: general' /tmp/helm-charts-ci-general.yaml
+grep -q 'podAntiAffinity:' /tmp/helm-charts-ci-general.yaml
 grep -q 'harokilabs.com/tekton-run-id: "\$(uid)"' /tmp/helm-charts-ci-default.yaml
 grep -q 'harokilabs.com/tekton-workspace: "source"' /tmp/helm-charts-ci-default.yaml
 grep -q "body.ref.replace('refs/heads/', '')" /tmp/helm-charts-ci-default.yaml

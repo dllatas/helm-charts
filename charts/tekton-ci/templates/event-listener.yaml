@@ -66,6 +66,21 @@ metadata:
     {{- include "tekton-ci.commonLabels" . | nindent 4 }}
 spec:
   serviceAccountName: {{ .Values.eventListener.serviceAccountName }}
+  {{- if or .Values.eventListener.nodeSelector .Values.eventListener.affinity }}
+  resources:
+    kubernetesResource:
+      spec:
+        template:
+          spec:
+            {{- with .Values.eventListener.nodeSelector }}
+            nodeSelector:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            {{- with .Values.eventListener.affinity }}
+            affinity:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+  {{- end }}
   triggers:
     {{- range $trigger := .Values.triggers }}
     {{- include "tekton-ci.eventListenerTrigger" (dict "root" $ "trigger" $trigger) | nindent 4 }}
@@ -82,6 +97,21 @@ metadata:
     {{- include "tekton-ci.commonLabels" $ | nindent 4 }}
 spec:
   serviceAccountName: {{ $.Values.eventListener.serviceAccountName }}
+  {{- if or $.Values.eventListener.nodeSelector $.Values.eventListener.affinity }}
+  resources:
+    kubernetesResource:
+      spec:
+        template:
+          spec:
+            {{- with $.Values.eventListener.nodeSelector }}
+            nodeSelector:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+            {{- with $.Values.eventListener.affinity }}
+            affinity:
+              {{- toYaml . | nindent 14 }}
+            {{- end }}
+  {{- end }}
   triggers:
     {{- include "tekton-ci.eventListenerTrigger" (dict "root" $ "trigger" $trigger) | nindent 4 }}
 {{- end }}

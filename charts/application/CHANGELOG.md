@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.5
+
+- Added pod-level `nodeSelector` and `affinity` support so PVC-backed `application` consumers can pin workloads away from small nodes.
+- Added render coverage for scheduling passthrough.
+
 ## 0.0.4
 
 - Fixed `HTTPRoute.backendRefs` rendering to honor `resourceNameStrategy: exact`.

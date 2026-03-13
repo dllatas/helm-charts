@@ -101,6 +101,8 @@ Each entry in `triggers[]` defines one webhook trigger:
 
 - `run.pvcSize` defaults to `1Gi`
 - `run.storageClassName` can target a dedicated storage class for ephemeral Tekton workspaces
+- `run.nodeSelector` and `run.affinity` control where PVC-backed `PipelineRun` pods land
+- `eventListener.nodeSelector` and `eventListener.affinity` control where always-on EventListener pods land
 
 ## HTTPRoute
 
@@ -115,6 +117,7 @@ Enable with `httpRoute.enabled: true`.
 - `examples/single-listener.yaml`
 - `examples/per-trigger.yaml`
 - `examples/api-v1.yaml`
+- `examples/general-capacity.yaml`
 - `examples/inline-deploy-netcup-apps.yaml`
 - `examples/invalid-duplicate-trigger.yaml`
 - `examples/invalid-missing-path.yaml`
