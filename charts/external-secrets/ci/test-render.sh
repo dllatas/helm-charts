@@ -12,6 +12,11 @@ helm template external-secrets-defaults "$CHART_DIR" -f "$CHART_DIR/examples/def
 
 grep -q '^apiVersion: external-secrets.io/v1$' /tmp/external-secrets-data.yaml
 grep -q '^kind: ExternalSecret$' /tmp/external-secrets-data.yaml
+grep -q '^        conversionStrategy: Default$' /tmp/external-secrets-data.yaml
+grep -q '^        decodingStrategy: None$' /tmp/external-secrets-data.yaml
+grep -q '^        metadataPolicy: None$' /tmp/external-secrets-data.yaml
+grep -q '^      engineVersion: v2$' /tmp/external-secrets-data.yaml
+grep -q '^      mergePolicy: Replace$' /tmp/external-secrets-data.yaml
 grep -q '^  dataFrom:$' /tmp/external-secrets-data-from.yaml
 grep -q '^apiVersion: external-secrets.io/v1$' /tmp/external-secrets-v1.yaml
 grep -q '^  namespace: staging$' /tmp/external-secrets-defaults.yaml

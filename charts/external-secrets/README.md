@@ -32,6 +32,8 @@ Optional per external secret:
 - `labels`, `annotations`
 - `target.creationPolicy`, `target.deletionPolicy`, `target.template`, `target.immutable`
 
+When `apiVersion` is `external-secrets.io/v1`, the chart renders the controller's defaulted `remoteRef` and target template fields explicitly so Argo comparison stays aligned with live objects after reconciliation.
+
 ## Validation guards
 
 Template-time `fail` checks reject:
