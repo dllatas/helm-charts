@@ -36,6 +36,14 @@ spec:
         podTemplate:
           securityContext:
             fsGroup: {{ .Values.run.fsGroup }}
+          {{- with .Values.run.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.run.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
         workspaces:
           - name: shared-data
             volumeClaimTemplate:

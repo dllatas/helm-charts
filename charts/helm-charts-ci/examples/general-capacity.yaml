@@ -1,0 +1,31 @@
+github:
+  repositoryFullName: dllatas/helm-charts
+
+run:
+  nodeSelector:
+    harokilabs.com/capacity-class: general
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: harokilabs.com/capacity-class
+                operator: In
+                values:
+                  - general
+
+eventListener:
+  nodeSelector:
+    harokilabs.com/capacity-class: general
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/instance: helm-charts-ci-general
+
+httpRoute:
+  enabled: false

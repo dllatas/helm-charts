@@ -50,6 +50,8 @@ Default `run.pvcSize` is `1Gi`.
 This chart uses separate Tekton Tasks for clone, validate, and publish, so the checked-out repository must live on a shared PVC-backed workspace.
 `emptyDir` is not supported for this chart.
 Set `run.storageClassName` when CI workspaces should use a dedicated ephemeral storage class.
+Use `run.nodeSelector` / `run.affinity` to keep PVC-backed `PipelineRun` pods on the general-capacity nodes.
+Use `eventListener.nodeSelector` / `eventListener.affinity` to keep the always-on EventListener off the small node.
 
 If terminal `PipelineRun` and `TaskRun` objects are retained for a long time, their workspace PVCs accumulate as well.
 Plan to prune completed Tekton runs in-cluster; [Tekton Pruner](https://github.com/tektoncd/pruner) is the right follow-up.
@@ -119,6 +121,7 @@ Once a `push` to `master` runs, inspect the pipeline logs for `dist/publish-summ
 - `examples/default-ci.yaml`
 - `examples/no-route.yaml`
 - `examples/api-v1.yaml`
+- `examples/general-capacity.yaml`
 - `examples/pvc-workspace.yaml`
 - `examples/invalid-emptydir-workspace.yaml`
 - `examples/invalid-missing-repo.yaml`

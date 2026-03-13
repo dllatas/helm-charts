@@ -1,0 +1,37 @@
+run:
+  nodeSelector:
+    harokilabs.com/capacity-class: general
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/instance: tekton-ci-general
+
+eventListener:
+  mode: single
+  name: github-general
+  nodeSelector:
+    harokilabs.com/capacity-class: general
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: harokilabs.com/capacity-class
+                operator: In
+                values:
+                  - general
+
+triggers:
+  - name: general
+    repoFullName: org/repo
+    image:
+      reference: harbor.example.com/project/app
+      dockerfile: Dockerfile
+      context: .
+    pathFilters:
+      - ".*"

@@ -28,6 +28,8 @@ run:
   pvcAccessModes:
     - ReadWriteOnce
   fsGroup: 65532
+  nodeSelector: {}
+  affinity: {}
   skipE2E: true
   sshSecretName: ssh-key
   dockerSecretName: docker-credentials
@@ -41,6 +43,8 @@ triggerTemplate:
 eventListener:
   name: github-helm-charts
   serviceAccountName: ci-services
+  nodeSelector: {}
+  affinity: {}
 
 github:
   secretName: github-secret

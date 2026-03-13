@@ -53,6 +53,8 @@ run:
   pvcAccessModes:
     - ReadWriteOnce
   fsGroup: 65532
+  nodeSelector: {}
+  affinity: {}
   sshSecretName: ssh-key
   dockerSecretName: docker-credentials
 
@@ -67,6 +69,8 @@ eventListener:
   eventTypes:
     - push
   includeChangedFiles: true
+  nodeSelector: {}
+  affinity: {}
 
 triggerBinding:
   create: true

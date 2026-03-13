@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.15
+
+- Added `eventListener.nodeSelector` and `eventListener.affinity` so the always-on webhook listener can avoid small nodes.
+- Added `run.nodeSelector` and `run.affinity` so PVC-backed Tekton `PipelineRun` pods can target a specific node class.
+
 ## 0.1.14
 
 - Fixed push branch extraction to preserve slash-named branches by stripping the `refs/heads/` prefix instead of splitting on `/`.

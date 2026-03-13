@@ -17,6 +17,8 @@ selectorLabels: {}
 imagePullSecrets: []
 serviceAccountName: ""
 podSecurityContext: {}
+nodeSelector: {}
+affinity: {}
 
 containers:
   - name: app

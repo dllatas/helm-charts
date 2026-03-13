@@ -10,9 +10,13 @@ helm template tekton-ci-single "$CHART_DIR" -f "$CHART_DIR/examples/single-liste
 helm template tekton-ci-per "$CHART_DIR" -f "$CHART_DIR/examples/per-trigger.yaml" >/tmp/tekton-ci-per.yaml
 helm template tekton-ci-v1 "$CHART_DIR" -f "$CHART_DIR/examples/api-v1.yaml" >/tmp/tekton-ci-v1.yaml
 helm template tekton-ci-inline "$CHART_DIR" -f "$CHART_DIR/examples/inline-deploy-netcup-apps.yaml" >/tmp/tekton-ci-inline.yaml
+helm template tekton-ci-general "$CHART_DIR" -f "$CHART_DIR/examples/general-capacity.yaml" >/tmp/tekton-ci-general.yaml
 
 grep -q "branch_slug" /tmp/tekton-ci-single.yaml
 grep -q 'storageClassName: "longhorn-ci-ephemeral"' /tmp/tekton-ci-inline.yaml
+grep -q 'kubernetesResource:' /tmp/tekton-ci-general.yaml
+grep -q 'harokilabs.com/capacity-class: general' /tmp/tekton-ci-general.yaml
+grep -q 'podAntiAffinity:' /tmp/tekton-ci-general.yaml
 if grep -q "split('/')\[2\]" /tmp/tekton-ci-single.yaml; then
   echo "Expected branch extraction to preserve slash-named branches"
   exit 1
