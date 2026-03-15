@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.8
+
+- Fixed path filter regex matching: added `^` anchor to all generated CEL expressions in `changedFilesPredicate` and `commitPathPredicate` so patterns like `backend/.*` no longer match unrelated paths such as `coach-backend/`.
+
 ## 0.3.7
 
 - Added `eventListener.nodeSelector` and `eventListener.affinity` so always-on Tekton listeners can avoid small nodes.
