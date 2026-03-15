@@ -74,7 +74,7 @@ harokilabs.com/tekton-workspace: {{ .workspace | quote }}
 {{- $trigger := .trigger -}}
 {{- $first := true -}}
 {{- range $path := $trigger.pathFilters -}}
-{{- if not $first }} || {{ end -}}extensions.changed_files.matches('{{ $path }}')
+{{- if not $first }} || {{ end -}}extensions.changed_files.matches('^{{ $path }}')
 {{- $first = false -}}
 {{- end -}}
 {{- end -}}
@@ -84,9 +84,9 @@ harokilabs.com/tekton-workspace: {{ .workspace | quote }}
 {{- $first := true -}}
 {{- range $path := $trigger.pathFilters -}}
 {{- if not $first }} || {{ end -}}
-commit.modified.exists(path, path.matches('{{ $path }}')) ||
-commit.added.exists(path, path.matches('{{ $path }}')) ||
-commit.removed.exists(path, path.matches('{{ $path }}'))
+commit.modified.exists(path, path.matches('^{{ $path }}')) ||
+commit.added.exists(path, path.matches('^{{ $path }}')) ||
+commit.removed.exists(path, path.matches('^{{ $path }}'))
 {{- $first = false -}}
 {{- end -}}
 {{- end -}}
