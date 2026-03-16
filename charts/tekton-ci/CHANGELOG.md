@@ -1,8 +1,12 @@
 # Changelog
 
+## 0.3.10
+
+- Fixed `changedFilesPredicate` to use the correct separator. Tekton's `addChangedFiles` interceptor produces a comma-separated `changed_files` string, not space-separated. Changed `(^| )<path>` to `(^|,)<path>` so all path filters match correctly when a push touches multiple components.
+
 ## 0.3.9
 
-- Fixed `changedFilesPredicate` so path filters match anywhere in the space-separated `changed_files` string, not only at the start. Changed `^<path>` to `(^| )<path>` so pushes that touch multiple components (e.g. both `backend/` and `vite-app/`) correctly trigger all relevant builds instead of only the one whose path happened to appear first.
+- Fixed `changedFilesPredicate` so path filters match anywhere in the `changed_files` string, not only at the start. Changed `^<path>` to `(^| )<path>` — superseded by 0.3.10 which uses the correct comma separator.
 
 ## 0.3.8
 

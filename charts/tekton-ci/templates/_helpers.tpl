@@ -74,7 +74,7 @@ harokilabs.com/tekton-workspace: {{ .workspace | quote }}
 {{- $trigger := .trigger -}}
 {{- $first := true -}}
 {{- range $path := $trigger.pathFilters -}}
-{{- if not $first }} || {{ end -}}extensions.changed_files.matches('(^| ){{ $path }}')
+{{- if not $first }} || {{ end -}}extensions.changed_files.matches('(^|,){{ $path }}')
 {{- $first = false -}}
 {{- end -}}
 {{- end -}}
