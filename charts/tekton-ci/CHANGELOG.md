@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.9
+
+- Fixed `changedFilesPredicate` so path filters match anywhere in the space-separated `changed_files` string, not only at the start. Changed `^<path>` to `(^| )<path>` so pushes that touch multiple components (e.g. both `backend/` and `vite-app/`) correctly trigger all relevant builds instead of only the one whose path happened to appear first.
+
 ## 0.3.8
 
 - Fixed path filter regex matching: added `^` anchor to all generated CEL expressions in `changedFilesPredicate` and `commitPathPredicate` so patterns like `backend/.*` no longer match unrelated paths such as `coach-backend/`.
