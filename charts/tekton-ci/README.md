@@ -15,6 +15,8 @@ Environment-agnostic Tekton CI bundle chart for webhook-driven pipelines.
 Generated `PipelineRun` objects carry `harokilabs.com/tekton-run-id: "$(uid)"`.
 Tekton propagates PipelineRun labels onto child `TaskRun` objects, and this chart stamps the same label onto the workspace PVC template together with `harokilabs.com/tekton-workspace`.
 
+By default, runtime objects (`PipelineRun` and workspace PVC templates) do not include Helm release labels such as `app.kubernetes.io/instance`. This avoids ArgoCD tracking drift on generated resources. If needed, set `run.includeCommonLabelsInRuntimeObjects=true`.
+
 That gives one stable join key across:
 
 - `PipelineRun`

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.11
+
+- Stopped inheriting Helm common labels on generated runtime objects (`PipelineRun` and workspace PVC templates) by default to avoid ArgoCD tracking drift.
+- Added `run.includeCommonLabelsInRuntimeObjects` (default `false`) to opt back into previous behavior when needed.
+- Added `run.runtimeLabels` to stamp custom labels on generated runtime objects without coupling them to release labels.
+
 ## 0.3.10
 
 - Fixed `changedFilesPredicate` to use the correct separator. Tekton's `addChangedFiles` interceptor produces a comma-separated `changed_files` string, not space-separated. Changed `(^| )<path>` to `(^|,)<path>` so all path filters match correctly when a push touches multiple components.

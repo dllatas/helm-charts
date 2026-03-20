@@ -25,17 +25,27 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end -}}
 
 {{- define "tekton-ci.pipelineRunLabels" -}}
+{{- if .Values.run.includeCommonLabelsInRuntimeObjects }}
 {{- include "tekton-ci.commonLabels" . }}
+{{- end }}
 tekton.dev/pipeline: {{ include "tekton-ci.pipelineName" . | quote }}
 harokilabs.com/tekton-run-id: "$(uid)"
+{{- with .Values.run.runtimeLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end -}}
 
 {{- define "tekton-ci.workspaceLabels" -}}
 {{- $root := .root -}}
+{{- if $root.Values.run.includeCommonLabelsInRuntimeObjects }}
 {{- include "tekton-ci.commonLabels" $root }}
+{{- end }}
 tekton.dev/pipeline: {{ include "tekton-ci.pipelineName" $root | quote }}
 harokilabs.com/tekton-run-id: "$(uid)"
 harokilabs.com/tekton-workspace: {{ .workspace | quote }}
+{{- with $root.Values.run.runtimeLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end -}}
 
 {{- define "tekton-ci.pipelineName" -}}

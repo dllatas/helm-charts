@@ -287,6 +287,15 @@
           "type": "integer",
           "minimum": 1
         },
+        "includeCommonLabelsInRuntimeObjects": {
+          "type": "boolean"
+        },
+        "runtimeLabels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
         "nodeSelector": {
           "type": "object",
           "additionalProperties": {
