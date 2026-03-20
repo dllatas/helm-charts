@@ -53,6 +53,8 @@ run:
   pvcAccessModes:
     - ReadWriteOnce
   fsGroup: 65532
+  includeCommonLabelsInRuntimeObjects: false
+  runtimeLabels: {}
   nodeSelector: {}
   affinity: {}
   sshSecretName: ssh-key

@@ -11,6 +11,8 @@ helm template tekton-ci-per "$CHART_DIR" -f "$CHART_DIR/examples/per-trigger.yam
 helm template tekton-ci-v1 "$CHART_DIR" -f "$CHART_DIR/examples/api-v1.yaml" >/tmp/tekton-ci-v1.yaml
 helm template tekton-ci-inline "$CHART_DIR" -f "$CHART_DIR/examples/inline-deploy-netcup-apps.yaml" >/tmp/tekton-ci-inline.yaml
 helm template tekton-ci-general "$CHART_DIR" -f "$CHART_DIR/examples/general-capacity.yaml" >/tmp/tekton-ci-general.yaml
+helm template tekton-ci-single-common "$CHART_DIR" -f "$CHART_DIR/examples/single-listener.yaml" \
+  --set run.includeCommonLabelsInRuntimeObjects=true >/tmp/tekton-ci-single-common.yaml
 
 grep -q "branch_slug" /tmp/tekton-ci-single.yaml
 grep -q 'storageClassName: "longhorn-ci-ephemeral"' /tmp/tekton-ci-inline.yaml
@@ -24,6 +26,16 @@ fi
 grep -q '\$(tt.params.branch-slug)-\$(tt.params.git-revision-short)' /tmp/tekton-ci-single.yaml
 grep -q 'harokilabs.com/tekton-run-id: "\$(uid)"' /tmp/tekton-ci-single.yaml
 grep -q 'harokilabs.com/tekton-workspace: "shared-data"' /tmp/tekton-ci-single.yaml
+
+awk '/kind: PipelineRun/{flag=1} flag && /^      spec:/{flag=0} flag{print}' /tmp/tekton-ci-single.yaml >/tmp/tekton-ci-pipelinerun-labels-default.txt
+if grep -q 'app.kubernetes.io/instance:' /tmp/tekton-ci-pipelinerun-labels-default.txt; then
+  echo "Expected generated PipelineRun labels to omit Helm common labels by default"
+  exit 1
+fi
+
+awk '/kind: PipelineRun/{flag=1} flag && /^      spec:/{flag=0} flag{print}' /tmp/tekton-ci-single-common.yaml >/tmp/tekton-ci-pipelinerun-labels-common.txt
+grep -q 'app.kubernetes.io/instance:' /tmp/tekton-ci-pipelinerun-labels-common.txt
+
 grep -q 'git config --global --add safe.directory "$(pwd)"' /tmp/tekton-ci-inline.yaml
 grep -q 'helm registry login "${DEPLOY_REGISTRY}"' /tmp/tekton-ci-inline.yaml
 if grep -q 'resolve_changed_files || true' /tmp/tekton-ci-inline.yaml; then
