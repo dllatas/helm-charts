@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.12
+
+- Added `pipeline.buildPushRetries` (default `2`) and wired it to the `build-push` task `retries` field to make image pushes more resilient to transient registry failures.
+
 ## 0.3.11
 
 - Stopped inheriting Helm common labels on generated runtime objects (`PipelineRun` and workspace PVC templates) by default to avoid ArgoCD tracking drift.
