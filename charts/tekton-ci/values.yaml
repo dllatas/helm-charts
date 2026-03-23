@@ -15,6 +15,7 @@ pipeline:
   name: build
   serviceAccountName: ci-services
   builderImage: quay.io/buildah/stable:v1.39.2
+  buildPushRetries: 2
   buildArgs: []
   params:
     repoUrl: repo-url

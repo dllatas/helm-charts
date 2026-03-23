@@ -65,6 +65,7 @@ spec:
     - name: build-push
       taskRef:
         name: {{ .Values.taskRefs.build }}
+      retries: {{ .Values.pipeline.buildPushRetries }}
       runAfter:
         - clone-repo
       workspaces:

@@ -82,6 +82,7 @@
         "name",
         "serviceAccountName",
         "builderImage",
+        "buildPushRetries",
         "buildArgs",
         "params"
       ],
@@ -104,6 +105,10 @@
         "builderImage": {
           "type": "string",
           "minLength": 1
+        },
+        "buildPushRetries": {
+          "type": "integer",
+          "minimum": 0
         },
         "buildArgs": {
           "type": "array",
