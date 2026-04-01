@@ -1,0 +1,154 @@
+{{- if gt (int .Values.replica.replicaCount) 0 }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "redis.replicaServiceName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "redis.labels" (dict "root" . "component" "replica") | indent 4 }}
+spec:
+  podManagementPolicy: Parallel
+  serviceName: {{ include "redis.replicaHeadlessServiceName" . }}
+  replicas: {{ .Values.replica.replicaCount }}
+  selector:
+    matchLabels:
+{{ include "redis.selectorLabels" (dict "root" . "component" "replica") | indent 6 }}
+  template:
+    metadata:
+      labels:
+{{ include "redis.selectorLabels" (dict "root" . "component" "replica") | indent 8 }}
+{{- with .Values.replica.podLabels }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.replica.podAnnotations }}
+      annotations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+    spec:
+      serviceAccountName: {{ include "redis.serviceAccountName" . }}
+{{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+{{- end }}
+{{- if .Values.podSecurityContext.enabled }}
+      securityContext:
+        fsGroup: {{ .Values.podSecurityContext.fsGroup }}
+        fsGroupChangePolicy: {{ .Values.podSecurityContext.fsGroupChangePolicy }}
+{{- end }}
+      containers:
+        - name: redis
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /opt/redis/scripts/start-replica.sh
+          ports:
+            - name: redis
+              containerPort: {{ .Values.redis.port }}
+              protocol: TCP
+{{- if .Values.containerSecurityContext.enabled }}
+          securityContext:
+            allowPrivilegeEscalation: {{ .Values.containerSecurityContext.allowPrivilegeEscalation }}
+            runAsNonRoot: {{ .Values.containerSecurityContext.runAsNonRoot }}
+            capabilities:
+{{ toYaml .Values.containerSecurityContext.capabilities | indent 14 }}
+            seccompProfile:
+{{ toYaml .Values.containerSecurityContext.seccompProfile | indent 14 }}
+{{- end }}
+{{- if .Values.auth.enabled }}
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "redis.authSecretName" . }}
+                  key: {{ .Values.auth.existingSecretPasswordKey }}
+            - name: REDISCLI_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "redis.authSecretName" . }}
+                  key: {{ .Values.auth.existingSecretPasswordKey }}
+{{- end }}
+          startupProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - redis-cli -h 127.0.0.1 -p {{ .Values.redis.port }} ping | grep PONG
+            failureThreshold: {{ .Values.probes.startup.failureThreshold }}
+            periodSeconds: {{ .Values.probes.startup.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.startup.timeoutSeconds }}
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - redis-cli -h 127.0.0.1 -p {{ .Values.redis.port }} ping | grep PONG
+            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - redis-cli -h 127.0.0.1 -p {{ .Values.redis.port }} ping | grep PONG
+            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
+          resources:
+{{ toYaml .Values.replica.resources | indent 12 }}
+          volumeMounts:
+            - name: scripts
+              mountPath: /opt/redis/scripts
+              readOnly: true
+            - name: data
+              mountPath: /data
+{{- if .Values.replica.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.replica.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.replica.affinity }}
+      affinity:
+{{ toYaml .Values.replica.affinity | indent 8 }}
+{{- else }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+{{ include "redis.selectorLabels" (dict "root" . "component" "replica") | indent 20 }}
+                topologyKey: kubernetes.io/hostname
+{{- end }}
+{{- if .Values.replica.tolerations }}
+      tolerations:
+{{ toYaml .Values.replica.tolerations | indent 8 }}
+{{- end }}
+      volumes:
+        - name: scripts
+          configMap:
+            name: {{ include "redis.fullname" . }}-scripts
+            defaultMode: 0555
+{{- if not .Values.replica.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+{{- end }}
+{{- if .Values.replica.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+{{ include "redis.labels" (dict "root" . "component" "replica") | indent 10 }}
+      spec:
+        accessModes:
+{{ toYaml .Values.replica.persistence.accessModes | indent 10 }}
+{{- if .Values.replica.persistence.storageClassName }}
+        storageClassName: {{ .Values.replica.persistence.storageClassName | quote }}
+{{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.replica.persistence.size }}
+{{- end }}
+{{- end }}

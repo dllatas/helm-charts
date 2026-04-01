@@ -1,0 +1,6 @@
+auth:
+  enabled: true
+  password: redis-example-password
+
+replica:
+  replicaCount: 2
