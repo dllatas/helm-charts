@@ -1,0 +1,27 @@
+apiVersions:
+  argocd: argoproj.io/v1alpha1
+
+defaults:
+  namespace: argocd
+  project: default
+  destinationServer: https://kubernetes.default.svc
+
+applications:
+  - name: agentgateway-crds
+    annotations:
+      argocd.argoproj.io/sync-wave: "-1"
+    source:
+      repoURL: cr.agentgateway.dev/charts
+      targetRevision: v1.0.1
+      chart: agentgateway-crds
+      helm:
+        releaseName: agentgateway-crds
+        skipCrds: false
+    destination:
+      namespace: agentgateway-system
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true

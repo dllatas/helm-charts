@@ -1,0 +1,63 @@
+apiVersions:
+  argocd: argoproj.io/v1alpha1
+
+defaults:
+  namespace: argocd
+  project: default
+  destinationServer: https://kubernetes.default.svc
+
+applications:
+  - name: kagent
+    annotations:
+      argocd.argoproj.io/sync-wave: "0"
+    source:
+      repoURL: ghcr.io/kagent-dev/kagent/helm
+      targetRevision: 0.8.3
+      chart: kagent
+      helm:
+        releaseName: kagent
+        values: |
+          rbac:
+            clusterScoped: false
+          controller:
+            watchNamespaces:
+              - kagent
+          providers:
+            default: openAI
+            openAI:
+              apiKeySecretRef: kagent-openai
+              apiKeySecretKey: OPENAI_API_KEY
+          agents:
+            k8s-agent:
+              enabled: false
+            kgateway-agent:
+              enabled: false
+            istio-agent:
+              enabled: false
+            promql-agent:
+              enabled: false
+            observability-agent:
+              enabled: false
+            argo-rollouts-agent:
+              enabled: false
+            helm-agent:
+              enabled: false
+            cilium-policy-agent:
+              enabled: false
+            cilium-manager-agent:
+              enabled: false
+            cilium-debug-agent:
+              enabled: false
+          tools:
+            grafana-mcp:
+              enabled: false
+            querydoc:
+              enabled: false
+    destination:
+      namespace: kagent
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true

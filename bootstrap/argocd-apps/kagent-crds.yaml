@@ -1,0 +1,26 @@
+apiVersions:
+  argocd: argoproj.io/v1alpha1
+
+defaults:
+  namespace: argocd
+  project: default
+  destinationServer: https://kubernetes.default.svc
+
+applications:
+  - name: kagent-crds
+    annotations:
+      argocd.argoproj.io/sync-wave: "-1"
+    source:
+      repoURL: ghcr.io/kagent-dev/kagent/helm
+      targetRevision: 0.8.3
+      chart: kagent-crds
+      helm:
+        releaseName: kagent-crds
+    destination:
+      namespace: kagent
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
