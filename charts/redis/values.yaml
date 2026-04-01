@@ -1,0 +1,110 @@
+global: {}
+
+nameOverride: ""
+fullnameOverride: ""
+
+commonLabels: {}
+
+image:
+  repository: redis
+  tag: "8.6.2"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+auth:
+  enabled: false
+  password: ""
+  existingSecret: ""
+  existingSecretPasswordKey: redis-password
+
+redis:
+  port: 6379
+  appendonly: true
+  protectedMode: false
+  extraArgs: []
+  primaryExtraArgs: []
+  replicaExtraArgs: []
+
+podSecurityContext:
+  enabled: true
+  fsGroup: 999
+  fsGroupChangePolicy: OnRootMismatch
+
+containerSecurityContext:
+  enabled: true
+  allowPrivilegeEscalation: false
+  runAsNonRoot: true
+  capabilities:
+    drop:
+      - ALL
+  seccompProfile:
+    type: RuntimeDefault
+
+probes:
+  startup:
+    failureThreshold: 30
+    periodSeconds: 5
+    timeoutSeconds: 5
+  liveness:
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    failureThreshold: 6
+    timeoutSeconds: 5
+  readiness:
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    failureThreshold: 6
+    timeoutSeconds: 3
+
+primary:
+  service:
+    type: ClusterIP
+    annotations: {}
+  podAnnotations: {}
+  podLabels: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  persistence:
+    enabled: true
+    storageClassName: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi
+
+replica:
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    annotations: {}
+  podAnnotations: {}
+  podLabels: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  persistence:
+    enabled: true
+    storageClassName: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi

@@ -54,6 +54,7 @@ v4.x.x+...
   - `charts/cluster-issuer`
   - `charts/certificate`
   - `charts/object-store`
+  - `charts/redis`
   - `charts/instrumentation`
   - `charts/telemetry`
   - `charts/service-monitor`

@@ -1,0 +1,16 @@
+primary:
+  persistence:
+    enabled: false
+    storageClassName: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi
+
+replica:
+  replicaCount: 1
+  persistence:
+    enabled: false
+    storageClassName: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi

@@ -1,0 +1,50 @@
+{{- $appendonly := ternary "yes" "no" .Values.redis.appendonly -}}
+{{- $protectedMode := ternary "yes" "no" .Values.redis.protectedMode -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "redis.fullname" . }}-scripts
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "redis.labels" (dict "root" . "component" "shared") | indent 4 }}
+data:
+  start-primary.sh: |
+    #!/bin/sh
+    set -eu
+    set -- redis-server
+    set -- "$@" --port "{{ .Values.redis.port }}"
+    set -- "$@" --bind "0.0.0.0"
+    set -- "$@" --protected-mode "{{ $protectedMode }}"
+    set -- "$@" --appendonly "{{ $appendonly }}"
+    set -- "$@" --dir "/data"
+{{- if .Values.auth.enabled }}
+    set -- "$@" --requirepass "${REDIS_PASSWORD}"
+{{- end }}
+{{- range .Values.redis.extraArgs }}
+    set -- "$@" {{ . | quote }}
+{{- end }}
+{{- range .Values.redis.primaryExtraArgs }}
+    set -- "$@" {{ . | quote }}
+{{- end }}
+    exec "$@"
+  start-replica.sh: |
+    #!/bin/sh
+    set -eu
+    set -- redis-server
+    set -- "$@" --port "{{ .Values.redis.port }}"
+    set -- "$@" --bind "0.0.0.0"
+    set -- "$@" --protected-mode "{{ $protectedMode }}"
+    set -- "$@" --appendonly "{{ $appendonly }}"
+    set -- "$@" --dir "/data"
+    set -- "$@" --replicaof "{{ include "redis.primaryServiceName" . }}" "{{ .Values.redis.port }}"
+{{- if .Values.auth.enabled }}
+    set -- "$@" --masterauth "${REDIS_PASSWORD}"
+    set -- "$@" --requirepass "${REDIS_PASSWORD}"
+{{- end }}
+{{- range .Values.redis.extraArgs }}
+    set -- "$@" {{ . | quote }}
+{{- end }}
+{{- range .Values.redis.replicaExtraArgs }}
+    set -- "$@" {{ . | quote }}
+{{- end }}
+    exec "$@"
