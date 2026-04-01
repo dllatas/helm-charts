@@ -1,0 +1,32 @@
+apiVersions:
+  argocd: argoproj.io/v1alpha1
+
+defaults:
+  namespace: argocd
+  project: default
+  destinationServer: https://kubernetes.default.svc
+
+applications:
+  - name: kubescape
+    labels:
+      app.kubernetes.io/part-of: phase1-security
+      harokilabs.com/phase: "1"
+    info:
+      - name: category
+        value: cluster-security
+      - name: source
+        value: upstream-helm-chart
+    source:
+      repoURL: https://kubescape.github.io/helm-charts/
+      targetRevision: 1.30.5
+      chart: kubescape-operator
+      helm:
+        releaseName: kubescape
+    destination:
+      namespace: kubescape
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
