@@ -36,10 +36,9 @@ applications:
           resources:
             requests:
               cpu: 100m
-              memory: 128Mi
+              memory: 256Mi
             limits:
-              cpu: 100m
-              memory: 128Mi
+              memory: 512Mi
     destination:
       namespace: agent-evals
     syncPolicy:
