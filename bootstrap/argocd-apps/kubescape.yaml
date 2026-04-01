@@ -8,6 +8,9 @@ defaults:
 
 applications:
   - name: kubescape
+    labels:
+      app.kubernetes.io/part-of: phase1-security
+      harokilabs.com/phase: "1"
     info:
       - name: category
         value: cluster-security

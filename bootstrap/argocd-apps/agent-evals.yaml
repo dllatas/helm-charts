@@ -8,6 +8,9 @@ defaults:
 
 applications:
   - name: agent-evals
+    labels:
+      app.kubernetes.io/part-of: phase1-ai-platform
+      harokilabs.com/phase: "1"
     info:
       - name: category
         value: eval-platform
@@ -28,6 +31,8 @@ applications:
             - secretRef:
                 name: agent-evals-env
                 optional: true
+          podLabels:
+            app.kubernetes.io/part-of: phase1-ai-platform
           resources:
             requests:
               cpu: 100m
