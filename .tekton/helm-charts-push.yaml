@@ -1,0 +1,221 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: helm-charts-push
+  annotations:
+    pipelinesascode.tekton.dev/task: "git-clone"
+    pipelinesascode.tekton.dev/target-namespace: "ci"
+    pipelinesascode.tekton.dev/on-cel-expression: >
+      event == "push" &&
+      body.deleted == false &&
+      body.ref.startsWith("refs/heads/") &&
+      files.all.exists(f,
+        f.startsWith("charts/") ||
+        f.startsWith("ci/") ||
+        f.startsWith(".tekton/")
+      )
+    pipelinesascode.tekton.dev/cancel-in-progress: "true"
+    pipelinesascode.tekton.dev/max-keep-runs: "10"
+spec:
+  params:
+    - name: repo-url
+      value: "{{repo_url}}"
+    - name: revision
+      value: "{{revision}}"
+    - name: base-ref
+      value: "{{body.before}}"
+    - name: head-ref
+      value: "{{revision}}"
+    - name: event-type
+      value: "push"
+    - name: branch-name
+      value: "{{source_branch}}"
+    - name: target-branch
+      value: "master"
+    - name: publish-enabled
+      value: "true"
+  pipelineSpec:
+    params:
+      - name: repo-url
+        type: string
+      - name: revision
+        type: string
+      - name: base-ref
+        type: string
+      - name: head-ref
+        type: string
+      - name: event-type
+        type: string
+      - name: branch-name
+        type: string
+      - name: target-branch
+        type: string
+      - name: publish-enabled
+        type: string
+    workspaces:
+      - name: source
+      - name: basic-auth
+    tasks:
+      - name: clone
+        taskRef:
+          name: git-clone
+        params:
+          - name: url
+            value: "$(params.repo-url)"
+          - name: revision
+            value: "$(params.revision)"
+          - name: depth
+            value: "0"
+          - name: deleteExisting
+            value: "true"
+        workspaces:
+          - name: output
+            workspace: source
+          - name: basic-auth
+            workspace: basic-auth
+      - name: validate
+        runAfter:
+          - clone
+        params:
+          - name: base-ref
+            value: "$(params.base-ref)"
+          - name: head-ref
+            value: "$(params.head-ref)"
+          - name: event-type
+            value: "$(params.event-type)"
+          - name: branch-name
+            value: "$(params.branch-name)"
+          - name: target-branch
+            value: "$(params.target-branch)"
+        workspaces:
+          - name: source
+            workspace: source
+        taskSpec:
+          params:
+            - name: base-ref
+              type: string
+            - name: head-ref
+              type: string
+            - name: event-type
+              type: string
+            - name: branch-name
+              type: string
+            - name: target-branch
+              type: string
+          workspaces:
+            - name: source
+          stepTemplate:
+            workingDir: $(workspaces.source.path)
+          steps:
+            - name: validate
+              image: quay.io/helmpack/chart-testing:v3.14.0
+              env:
+                - name: SKIP_E2E
+                  value: "true"
+                - name: STRICT_CHANGED_CHARTS
+                  value: "true"
+              script: |
+                #!/usr/bin/env bash
+                set -euo pipefail
+                export BASE_REF="$(params.base-ref)"
+                export HEAD_REF="$(params.head-ref)"
+                export EVENT_TYPE="$(params.event-type)"
+                branch_name="$(params.branch-name)"
+                target_branch="$(params.target-branch)"
+                export BRANCH_NAME="${branch_name#refs/heads/}"
+                export TARGET_BRANCH="${target_branch#refs/heads/}"
+                if [[ "$EVENT_TYPE" == "push" && "$BRANCH_NAME" == "$TARGET_BRANCH" ]]; then
+                  export DIFF_MODE="push-range"
+                else
+                  export BASE_REF="origin/$TARGET_BRANCH"
+                  export DIFF_MODE="merge-base"
+                fi
+                ./ci/scripts/run-validation.sh
+      - name: publish
+        runAfter:
+          - validate
+        when:
+          - input: "$(params.publish-enabled)"
+            operator: in
+            values:
+              - "true"
+          - input: "$(params.event-type)"
+            operator: in
+            values:
+              - "push"
+          - input: "$(params.branch-name)"
+            operator: in
+            values:
+              - "master"
+        params:
+          - name: base-ref
+            value: "$(params.base-ref)"
+          - name: head-ref
+            value: "$(params.head-ref)"
+          - name: branch-name
+            value: "$(params.branch-name)"
+        workspaces:
+          - name: source
+            workspace: source
+        taskSpec:
+          params:
+            - name: base-ref
+              type: string
+            - name: head-ref
+              type: string
+            - name: branch-name
+              type: string
+          workspaces:
+            - name: source
+          stepTemplate:
+            workingDir: $(workspaces.source.path)
+          steps:
+            - name: publish
+              image: quay.io/helmpack/chart-testing:v3.14.0
+              env:
+                - name: HARBOR_OCI_REPO
+                  valueFrom:
+                    secretKeyRef:
+                      name: helm-charts-publish
+                      key: harbor_oci_repo
+                - name: HARBOR_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: helm-charts-publish
+                      key: harbor_username
+                - name: HARBOR_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: helm-charts-publish
+                      key: harbor_password
+                - name: STRICT_CHANGED_CHARTS
+                  value: "true"
+              script: |
+                #!/usr/bin/env bash
+                set -euo pipefail
+                export BASE_REF="$(params.base-ref)"
+                export HEAD_REF="$(params.head-ref)"
+                branch_name="$(params.branch-name)"
+                export BRANCH_NAME="${branch_name#refs/heads/}"
+                export DIFF_MODE="push-range"
+                ./ci/scripts/publish-charts.sh
+  taskRunTemplate:
+    podTemplate:
+      securityContext:
+        fsGroup: 65532
+      nodeSelector:
+        harokilabs.com/capacity-class: general
+  serviceAccountName: ci-services
+  workspaces:
+    - name: source
+      volumeClaimTemplate:
+        spec:
+          storageClassName: longhorn-ci-ephemeral
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+    - name: basic-auth
+      secret:
+        secretName: "{{git_auth_secret}}"
