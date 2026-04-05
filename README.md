@@ -91,14 +91,24 @@ ci/scripts/run-validation.sh
 ci/scripts/publish-charts.sh
 ```
 
-Tekton manifest templates for webhook-driven validation/publish flows are under:
+Repository-owned Pipelines as Code definitions for validation and publish flows live under:
 
 ```text
+.tekton/
+```
+
+The legacy cluster-managed Tekton chart and pinned reference manifests are still kept under:
+
+```text
+charts/helm-charts-ci/
 ci/tekton/
 ```
 
-## Deploy Helm Charts CI Pipeline
+## Repo-owned CI
 
-For the full deployment runbook (Harbor bootstrap with OpenTofu, Helm install, webhook setup, and smoke test), see:
+Pipelines as Code runs these `.tekton/*.yaml` definitions in namespace `ci`.
+They call the repo-local `ci/scripts/*.sh` helpers, validate changed charts on pushes and pull requests, and publish changed charts only on pushes to `master`.
+
+For the legacy cluster-managed install/runbook, see:
 
 - `charts/helm-charts-ci/README.md`
