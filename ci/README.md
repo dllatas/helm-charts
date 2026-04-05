@@ -16,7 +16,7 @@ Repository-owned Pipelines as Code definitions live in `.tekton/` and call these
 ## PaC behavior
 
 - `.tekton/helm-charts-pr.yaml`: validate pull requests targeting `master`.
-- `.tekton/helm-charts-push.yaml`: validate every branch push and publish only pushes to `master`.
+- `.tekton/helm-charts-push.yaml`: validate pushes to `master` and publish only pushes to `master`.
 - Both definitions run with `SKIP_E2E=true` in-cluster and keep the shared PVC/node placement used by the legacy `helm-charts-ci` chart.
 
 ## PaC prerequisites

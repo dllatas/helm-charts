@@ -107,7 +107,7 @@ ci/tekton/
 ## Repo-owned CI
 
 Pipelines as Code runs these `.tekton/*.yaml` definitions in namespace `ci`.
-They call the repo-local `ci/scripts/*.sh` helpers, validate changed charts on pushes and pull requests, and publish changed charts only on pushes to `master`.
+They call the repo-local `ci/scripts/*.sh` helpers, validate changed charts on pull requests targeting `master` and on pushes to `master`, and publish changed charts only on pushes to `master`.
 
 For the legacy cluster-managed install/runbook, see:
 
