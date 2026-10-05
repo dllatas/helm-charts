@@ -49,6 +49,9 @@ convenience value for `affinity.podAntiAffinity`; when supplied, it takes
 precedence over `affinity.podAntiAffinity`. `topologySpreadConstraints` is an
 array passed through to `Deployment.spec.template.spec.topologySpreadConstraints`.
 Empty or omitted values render no additional scheduling fields.
+The example below assumes the Helm release is named `learner` and the chart's
+default name is `application`; its selectors match the chart's default pod
+labels (`app.kubernetes.io/name` and `app.kubernetes.io/instance`).
 
 ```yaml
 podAntiAffinity:
@@ -56,14 +59,16 @@ podAntiAffinity:
     - topologyKey: kubernetes.io/hostname
       labelSelector:
         matchLabels:
-          app.kubernetes.io/name: learner
+          app.kubernetes.io/name: application
+          app.kubernetes.io/instance: learner
 topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: kubernetes.io/hostname
     whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
-        app.kubernetes.io/name: learner
+        app.kubernetes.io/name: application
+        app.kubernetes.io/instance: learner
 ```
 
 ### `containers[]` (required)
