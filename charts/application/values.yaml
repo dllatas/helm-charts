@@ -19,6 +19,8 @@ serviceAccountName: ""
 podSecurityContext: {}
 nodeSelector: {}
 affinity: {}
+podAntiAffinity: {}
+topologySpreadConstraints: []
 
 containers:
   - name: app

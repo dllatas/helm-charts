@@ -18,6 +18,13 @@ affinity:
           labelSelector:
             matchLabels:
               app: example-api
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app: example-api
 
 containers:
   - name: app
