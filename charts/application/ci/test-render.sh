@@ -83,4 +83,30 @@ helm template application-null-anti-affinity "$tmpdir/application-null" -f "$tmp
 grep -q '^      affinity:$' "$tmpdir/null-affinity-anti-rendered.yaml"
 grep -q '^        podAntiAffinity:$' "$tmpdir/null-affinity-anti-rendered.yaml"
 
+cat >"$tmpdir/pdb-values.yaml" <<'EOF'
+containers:
+  - name: app
+    image: nginx:1.27.4
+pdb:
+  enabled: true
+  minAvailable: 1
+EOF
+helm template application-pdb-integer charts/application -f "$tmpdir/pdb-values.yaml" >"$tmpdir/pdb-integer.yaml"
+grep -q '^  minAvailable: 1$' "$tmpdir/pdb-integer.yaml"
+if grep -q '^  minAvailable: "1"$' "$tmpdir/pdb-integer.yaml"; then
+  echo "integer minAvailable should remain a YAML number" >&2
+  exit 1
+fi
+
+cat >"$tmpdir/pdb-values.yaml" <<'EOF'
+containers:
+  - name: app
+    image: nginx:1.27.4
+pdb:
+  enabled: true
+  maxUnavailable: "50%"
+EOF
+helm template application-pdb-percentage charts/application -f "$tmpdir/pdb-values.yaml" >"$tmpdir/pdb-percentage.yaml"
+grep -Eq '^  maxUnavailable: ?"?50%"?$' "$tmpdir/pdb-percentage.yaml"
+
 echo "application render tests passed"

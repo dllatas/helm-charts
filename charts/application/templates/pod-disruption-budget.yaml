@@ -20,8 +20,8 @@ spec:
     matchLabels:
       {{- include "application.selectorLabels" . | nindent 6 }}
   {{- if $hasMin }}
-  minAvailable: {{ .Values.pdb.minAvailable | quote }}
+  minAvailable: {{ .Values.pdb.minAvailable | toYaml }}
   {{- else }}
-  maxUnavailable: {{ .Values.pdb.maxUnavailable | quote }}
+  maxUnavailable: {{ .Values.pdb.maxUnavailable | toYaml }}
   {{- end }}
 {{- end }}

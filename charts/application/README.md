@@ -118,6 +118,12 @@ Each backend in `rules[].backendRefs[]` must define:
 - `service` (entry from `services[].name`)
 - `port` (numeric service port)
 
+### `pdb` (optional)
+
+Set `enabled: true` and exactly one of `minAvailable` or `maxUnavailable`.
+Each accepts an integer count or a percentage string, such as `minAvailable: 1`
+or `maxUnavailable: "50%"`.
+
 ## Validation guards
 
 Template-time `fail` checks ensure:
