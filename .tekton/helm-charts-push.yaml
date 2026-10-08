@@ -14,7 +14,7 @@ metadata:
         f.startsWith("ci/") ||
         f.startsWith(".tekton/")
       )
-    pipelinesascode.tekton.dev/cancel-in-progress: "true"
+    pipelinesascode.tekton.dev/cancel-in-progress: "false"
     pipelinesascode.tekton.dev/max-keep-runs: "10"
 spec:
   params:
