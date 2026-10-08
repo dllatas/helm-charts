@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.6
+
+- Added explicit optional pod anti-affinity and topology spread constraint values.
+- Documented scheduling value shapes and kept empty values out of rendered pods.
+
 ## 0.0.5
 
 - Added pod-level `nodeSelector` and `affinity` support so PVC-backed `application` consumers can pin workloads away from small nodes.

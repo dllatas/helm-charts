@@ -94,6 +94,17 @@
       "type": "object",
       "additionalProperties": true
     },
+    "podAntiAffinity": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "topologySpreadConstraints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
     "containers": {
       "type": "array",
       "minItems": 1,

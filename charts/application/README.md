@@ -25,7 +25,7 @@ Environment-agnostic Helm v4 chart for running Kubernetes applications with:
 - `resourceNameStrategy`: `prefixed` (default) or `exact` for `Service`, `HTTPRoute`, and PVC names.
 - `deploymentStrategy`: optional raw `Deployment.spec.strategy` passthrough. Use `type: Recreate` for single-replica `ReadWriteOnce` workloads.
 - `selectorLabels`: override the default selector labels used by the `Deployment` and generated `Service` resources.
-- `nodeSelector` and `affinity`: optional pod-level scheduling controls passed through to `Deployment.spec.template.spec`.
+- `nodeSelector`, `affinity`, `podAntiAffinity`, and `topologySpreadConstraints`: optional pod-level scheduling controls passed through to `Deployment.spec.template.spec`.
 - `global`: ignored by the chart itself, but accepted so the chart can be used as a dependency in composition charts.
 
 Without overrides, the default fullname is based on:
@@ -41,6 +41,35 @@ For adoption-heavy cases, combine:
 to preserve existing resource names and selectors.
 
 ## Values contract
+
+### Scheduling (optional)
+
+`affinity` accepts the Kubernetes affinity object. `podAntiAffinity` is a direct
+convenience value for `affinity.podAntiAffinity`; when supplied, it takes
+precedence over `affinity.podAntiAffinity`. `topologySpreadConstraints` is an
+array passed through to `Deployment.spec.template.spec.topologySpreadConstraints`.
+Empty or omitted values render no additional scheduling fields.
+The example below assumes the Helm release is named `learner` and the chart's
+default name is `application`; its selectors match the chart's default pod
+labels (`app.kubernetes.io/name` and `app.kubernetes.io/instance`).
+
+```yaml
+podAntiAffinity:
+  requiredDuringSchedulingIgnoredDuringExecution:
+    - topologyKey: kubernetes.io/hostname
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: application
+          app.kubernetes.io/instance: learner
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: application
+        app.kubernetes.io/instance: learner
+```
 
 ### `containers[]` (required)
 
