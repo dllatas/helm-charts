@@ -53,4 +53,34 @@ if grep -q '^      topologySpreadConstraints:' "$tmpdir/anti-affinity-rendered.y
   exit 1
 fi
 
+# Helm enforces the values schema before rendering, so remove it from a temporary
+# chart copy to exercise the template's behavior for an explicit null value.
+cp -R charts/application "$tmpdir/application-null"
+rm "$tmpdir/application-null/values.schema.json"
+cat >"$tmpdir/null-affinity.yaml" <<'EOF'
+containers:
+  - name: app
+    image: nginx:1.27.4
+affinity: null
+EOF
+helm template application-null "$tmpdir/application-null" -f "$tmpdir/null-affinity.yaml" >"$tmpdir/null-affinity-rendered.yaml"
+if grep -q '^      affinity:' "$tmpdir/null-affinity-rendered.yaml"; then
+  echo "null affinity without podAntiAffinity should not render" >&2
+  exit 1
+fi
+
+cat >>"$tmpdir/null-affinity.yaml" <<'EOF'
+podAntiAffinity:
+  preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        topologyKey: kubernetes.io/hostname
+        labelSelector:
+          matchLabels:
+            app: example
+EOF
+helm template application-null-anti-affinity "$tmpdir/application-null" -f "$tmpdir/null-affinity.yaml" >"$tmpdir/null-affinity-anti-rendered.yaml"
+grep -q '^      affinity:$' "$tmpdir/null-affinity-anti-rendered.yaml"
+grep -q '^        podAntiAffinity:$' "$tmpdir/null-affinity-anti-rendered.yaml"
+
 echo "application render tests passed"

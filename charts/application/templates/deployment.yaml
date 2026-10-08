@@ -61,7 +61,7 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- $affinity := deepCopy .Values.affinity }}
+      {{- $affinity := deepCopy (default dict .Values.affinity) }}
       {{- with .Values.podAntiAffinity }}
       {{- $_ := set $affinity "podAntiAffinity" . }}
       {{- end }}
