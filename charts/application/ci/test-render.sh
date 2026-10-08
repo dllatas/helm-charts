@@ -121,6 +121,6 @@ if helm template application-pdb-numeric-string charts/application -f "$tmpdir/p
   echo 'numeric string minAvailable should fail values schema validation' >&2
   exit 1
 fi
-grep -q 'does not match pattern' "$tmpdir/pdb-invalid.err"
+grep -qi 'does not match pattern' "$tmpdir/pdb-invalid.err"
 
 echo "application render tests passed"
