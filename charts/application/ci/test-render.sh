@@ -109,4 +109,18 @@ EOF
 helm template application-pdb-percentage charts/application -f "$tmpdir/pdb-values.yaml" >"$tmpdir/pdb-percentage.yaml"
 grep -Eq '^  maxUnavailable: ?"?50%"?$' "$tmpdir/pdb-percentage.yaml"
 
+cat >"$tmpdir/pdb-values.yaml" <<'EOF'
+containers:
+  - name: app
+    image: nginx:1.27.4
+pdb:
+  enabled: true
+  minAvailable: "1"
+EOF
+if helm template application-pdb-numeric-string charts/application -f "$tmpdir/pdb-values.yaml" >"$tmpdir/pdb-invalid.yaml" 2>"$tmpdir/pdb-invalid.err"; then
+  echo 'numeric string minAvailable should fail values schema validation' >&2
+  exit 1
+fi
+grep -q 'does not match pattern' "$tmpdir/pdb-invalid.err"
+
 echo "application render tests passed"
