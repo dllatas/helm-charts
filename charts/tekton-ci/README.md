@@ -29,6 +29,12 @@ That gives one stable join key across:
 - Secrets (`github-secret`, docker creds, ssh creds)
 - Tekton task resources (`git-clone`, `buildah`, custom tasks)
 
+The inline `deploy` Task step has explicit provisional CPU, memory, and ephemeral-storage requests and limits, configurable with `deploy.resources`. The shared `git-clone` TaskRef is handled by a separate `codex/tekton-bootstrap` change; it is not covered by this chart change and coverage is pending that PR.
+
+### Resource budget acceptance
+
+The inline deploy budget is provisional because retained cluster metrics do not cover this path. Runtime acceptance is pending deployment. After at least three representative successful inline deploy runs, record each PipelineRun URL/UID, changed-values file count, duration, and per-container CPU, memory, and ephemeral-storage usage, plus throttling, OOM, eviction, and failed scheduling signals. Compare observed peaks with requests and limits, adjust `deploy.resources` if needed, and retain the evidence with the rollout review.
+
 ## API version support
 
 Set API versions via values:

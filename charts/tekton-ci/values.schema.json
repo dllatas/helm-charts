@@ -2,6 +2,27 @@
   "$schema": "https://json-schema.org/draft-07/schema#",
   "type": "object",
   "additionalProperties": false,
+  "definitions": {
+    "stepResources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requests", "limits"],
+      "properties": {
+        "requests": {"$ref": "#/definitions/resourceQuantities"},
+        "limits": {"$ref": "#/definitions/resourceQuantities"}
+      }
+    },
+    "resourceQuantities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cpu", "memory", "ephemeral-storage"],
+      "properties": {
+        "cpu": {"type": "string", "minLength": 1},
+        "memory": {"type": "string", "minLength": 1},
+        "ephemeral-storage": {"type": "string", "minLength": 1}
+      }
+    }
+  },
   "required": [
     "apiVersions",
     "taskRefs",
@@ -177,6 +198,7 @@
       "additionalProperties": false,
       "required": [
         "image",
+        "resources",
         "valuesGlob",
         "lockSuffix",
         "chartRef",
@@ -189,6 +211,7 @@
           "type": "string",
           "minLength": 1
         },
+        "resources": {"$ref": "#/definitions/stepResources"},
         "valuesGlob": {
           "type": "string",
           "minLength": 1

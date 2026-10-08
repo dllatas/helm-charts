@@ -12,6 +12,12 @@ helm template helm-charts-ci-pvc "$CHART_DIR" -f "$CHART_DIR/examples/pvc-worksp
 helm template helm-charts-ci-general "$CHART_DIR" -f "$CHART_DIR/examples/general-capacity.yaml" >/tmp/helm-charts-ci-general.yaml
 
 grep -q 'volumeClaimTemplate:' /tmp/helm-charts-ci-default.yaml
+grep -q '^            resources:$' /tmp/helm-charts-ci-default.yaml
+grep -q '^            computeResources:$' /tmp/helm-charts-ci-v1.yaml
+grep -q 'ephemeral-storage: 2Gi' /tmp/helm-charts-ci-default.yaml
+grep -q 'ephemeral-storage: 8Gi' /tmp/helm-charts-ci-default.yaml
+grep -q 'memory: 1Gi' /tmp/helm-charts-ci-default.yaml
+grep -q 'memory: 4Gi' /tmp/helm-charts-ci-default.yaml
 grep -q 'volumeClaimTemplate:' /tmp/helm-charts-ci-pvc.yaml
 grep -q 'storage: 1Gi' /tmp/helm-charts-ci-default.yaml
 grep -q 'storageClassName: "longhorn-ci-ephemeral"' /tmp/helm-charts-ci-pvc.yaml

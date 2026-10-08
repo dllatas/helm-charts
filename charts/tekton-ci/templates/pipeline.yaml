@@ -106,6 +106,12 @@ spec:
         steps:
           - name: deploy
             image: {{ .Values.deploy.image | quote }}
+            {{ if eq .Values.apiVersions.tekton "tekton.dev/v1" }}
+            computeResources:
+            {{ else }}
+            resources:
+            {{ end }}
+              {{- toYaml .Values.deploy.resources | nindent 14 }}
             workingDir: $(workspaces.source.path)
             env:
               - name: CI_REPO_URL
