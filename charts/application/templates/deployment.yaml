@@ -61,17 +61,13 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- $affinity := deepCopy .Values.affinity }}
+      {{- with .Values.podAntiAffinity }}
+      {{- $_ := set $affinity "podAntiAffinity" . }}
+      {{- end }}
+      {{- with $affinity }}
       affinity:
-        {{- $affinity := deepCopy . }}
-        {{- with $.Values.podAntiAffinity }}
-        {{- $_ := set $affinity "podAntiAffinity" . }}
-        {{- end }}
-        {{- toYaml $affinity | nindent 8 }}
-      {{- else with .Values.podAntiAffinity }}
-      affinity:
-        podAntiAffinity:
-          {{- toYaml . | nindent 10 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.topologySpreadConstraints }}
       topologySpreadConstraints:
