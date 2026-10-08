@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.7
+
+- Preserve integer and string scalar types when rendering PodDisruptionBudget availability values.
+- Added render coverage for integer `minAvailable` and percentage `maxUnavailable` values.
+- Require percentage strings to include `%`, rejecting numeric strings that Kubernetes cannot accept as PDB availability values.
+
 ## 0.0.6
 
 - Added explicit optional pod anti-affinity and topology spread constraint values.
