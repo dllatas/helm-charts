@@ -11,3 +11,5 @@ resource changes publish as 0.3.13; helm-charts-ci advances to 0.1.16.
 The repository's four PaC validate/publish Steps now have explicit v1
 computeResources budgets. Render checks cover both supported API versions.
 Budgets remain provisional pending controlled runtime sampling. [skip tkn]
+
+2026-10-09 full v1 PipelineRun API check: preserve the configured CI service account under spec.taskRunTemplate.serviceAccountName. The legacy spec.serviceAccountName field is not part of the installed v1 schema. Complete PipelineRun specs now validate against the installed API, in addition to the strict Step resource check. [skip tkn]

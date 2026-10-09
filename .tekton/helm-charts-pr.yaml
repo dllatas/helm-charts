@@ -218,12 +218,12 @@ spec:
                 export DIFF_MODE="push-range"
                 ./ci/scripts/publish-charts.sh
   taskRunTemplate:
+    serviceAccountName: ci-services
     podTemplate:
       securityContext:
         fsGroup: 65532
       nodeSelector:
         harokilabs.com/capacity-class: general
-  serviceAccountName: ci-services
   workspaces:
     - name: source
       volumeClaimTemplate:
