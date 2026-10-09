@@ -25,7 +25,7 @@ spec:
     - name: base-ref
       value: "{{body.pull_request.base.sha}}"
     - name: head-ref
-      value: "{{body.pull_request.head.sha}}"
+      value: "{{revision}}"
     - name: event-type
       value: "pull_request"
     - name: branch-name
