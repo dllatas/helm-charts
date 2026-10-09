@@ -109,6 +109,15 @@ spec:
           steps:
             - name: validate
               image: quay.io/helmpack/chart-testing:v3.14.0
+              computeResources:
+                requests:
+                  cpu: 250m
+                  memory: 512Mi
+                  ephemeral-storage: 1Gi
+                limits:
+                  cpu: "1"
+                  memory: 2Gi
+                  ephemeral-storage: 4Gi
               env:
                 - name: SKIP_E2E
                   value: "true"
@@ -172,6 +181,15 @@ spec:
           steps:
             - name: publish
               image: quay.io/helmpack/chart-testing:v3.14.0
+              computeResources:
+                requests:
+                  cpu: 250m
+                  memory: 512Mi
+                  ephemeral-storage: 1Gi
+                limits:
+                  cpu: "1"
+                  memory: 2Gi
+                  ephemeral-storage: 4Gi
               env:
                 - name: HARBOR_OCI_REPO
                   valueFrom:
