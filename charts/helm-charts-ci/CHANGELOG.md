@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.16
+
+- Add provisional resource requests and limits for chart validation and publication steps, with schema and render checks.
+- Render v1 step budgets as `computeResources` and retain `resources` for v1beta1 definitions.
+
 ## 0.1.15
 
 - Added `eventListener.nodeSelector` and `eventListener.affinity` so the always-on webhook listener can avoid small nodes.

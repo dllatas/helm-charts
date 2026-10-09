@@ -11,6 +11,16 @@ pipeline:
   serviceAccountName: ci-services
   toolsImage: quay.io/helmpack/chart-testing:v3.14.0
   cloneTaskRef: git-clone
+  # Provisional for the inline validation and publish Task steps. Runtime acceptance is pending.
+  inlineStepResources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+      ephemeral-storage: 2Gi
+    limits:
+      cpu: "2"
+      memory: 4Gi
+      ephemeral-storage: 8Gi
 
 publish:
   enabled: true

@@ -59,6 +59,12 @@ spec:
         steps:
           - name: validate
             image: {{ .Values.pipeline.toolsImage | quote }}
+            {{ if eq .Values.apiVersions.tekton "tekton.dev/v1" }}
+            computeResources:
+            {{ else }}
+            resources:
+            {{ end }}
+              {{- toYaml .Values.pipeline.inlineStepResources | nindent 14 }}
             workingDir: $(workspaces.source.path)
             env:
               - name: SKIP_E2E
@@ -117,6 +123,12 @@ spec:
         steps:
           - name: publish
             image: {{ .Values.pipeline.toolsImage | quote }}
+            {{ if eq .Values.apiVersions.tekton "tekton.dev/v1" }}
+            computeResources:
+            {{ else }}
+            resources:
+            {{ end }}
+              {{- toYaml .Values.pipeline.inlineStepResources | nindent 14 }}
             workingDir: $(workspaces.source.path)
             env:
               - name: HARBOR_OCI_REPO

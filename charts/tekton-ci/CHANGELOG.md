@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.13
+
+- Add provisional resource requests and limits for inline deploy steps, with schema and render checks.
+- Render v1 step budgets as `computeResources` and retain `resources` for v1beta1 definitions.
+
 ## 0.3.12
 
 - Added `pipeline.buildPushRetries` (default `2`) and wired it to the `build-push` task `retries` field to make image pushes more resilient to transient registry failures.

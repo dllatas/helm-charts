@@ -49,6 +49,12 @@ Default `run.workspaceType` is `volumeClaimTemplate`.
 Default `run.pvcSize` is `1Gi`.
 This chart uses separate Tekton Tasks for clone, validate, and publish, so the checked-out repository must live on a shared PVC-backed workspace.
 `emptyDir` is not supported for this chart.
+
+The inline `validate` and `publish` Task steps have explicit provisional CPU, memory, and ephemeral-storage requests and limits, configurable with `pipeline.inlineStepResources`. The shared `git-clone` TaskRef is handled by a separate `codex/tekton-bootstrap` change; it is not covered by this chart change and coverage is pending that PR.
+
+### Resource budget acceptance
+
+The inline validate and publish budgets are provisional because retained cluster metrics do not cover these paths. Runtime acceptance is pending deployment. After at least three representative successful validation runs and three publish runs, record each PipelineRun URL/UID, changed-chart count and type, duration, and per-container CPU, memory, and ephemeral-storage usage, plus throttling, OOM, eviction, and failed scheduling signals. Compare observed peaks with requests and limits, adjust `pipeline.inlineStepResources` if needed, and retain the evidence with the rollout review.
 Set `run.storageClassName` when CI workspaces should use a dedicated ephemeral storage class.
 Use `run.nodeSelector` / `run.affinity` to keep PVC-backed `PipelineRun` pods on the general-capacity nodes.
 Use `eventListener.nodeSelector` / `eventListener.affinity` to keep the always-on EventListener off the small node.

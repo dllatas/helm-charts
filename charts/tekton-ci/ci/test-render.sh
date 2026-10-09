@@ -38,6 +38,11 @@ grep -q 'app.kubernetes.io/instance:' /tmp/tekton-ci-pipelinerun-labels-common.t
 
 grep -q 'git config --global --add safe.directory "$(pwd)"' /tmp/tekton-ci-inline.yaml
 grep -q 'helm registry login "${DEPLOY_REGISTRY}"' /tmp/tekton-ci-inline.yaml
+grep -q '^            resources:$' /tmp/tekton-ci-inline.yaml
+grep -q 'ephemeral-storage: 2Gi' /tmp/tekton-ci-inline.yaml
+grep -q 'ephemeral-storage: 8Gi' /tmp/tekton-ci-inline.yaml
+grep -q 'memory: 1Gi' /tmp/tekton-ci-inline.yaml
+grep -q 'memory: 4Gi' /tmp/tekton-ci-inline.yaml
 if grep -q 'resolve_changed_files || true' /tmp/tekton-ci-inline.yaml; then
   echo "Expected inline deploy script to fail fast on git errors"
   exit 1

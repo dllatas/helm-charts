@@ -31,6 +31,16 @@ pipeline:
 
 deploy:
   image: quay.io/helmpack/chart-testing:v3.14.0
+  # Provisional for the inline deploy Task step. Runtime acceptance is pending.
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+      ephemeral-storage: 2Gi
+    limits:
+      cpu: "2"
+      memory: 4Gi
+      ephemeral-storage: 8Gi
   valuesGlob: bootstrap/argocd-apps/*.yaml
   lockSuffix: .lock.yaml
   chartRef: oci://harbor.harokilabs.com/helm-charts/argocd-apps
